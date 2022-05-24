@@ -35,10 +35,10 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   track.setArtist(decodeString(node.ARTIST))
   track.setAlbum(decodeString(albumNode?.TITLE))
   track.setBpm(parseFloat(tempoNode?.BPM))
-  track.setBitRate(parseInt(infoNode.BITRATE))
+  track.setBitRate(parseInt(infoNode?.BITRATE))
 
   let colorName
-  switch (infoNode.COLOR) {
+  switch (infoNode?.COLOR) {
     case 0:
       colorName = '#FF0000' //red
       break
@@ -65,36 +65,44 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   }
 
   track.setColor(colorName)
-  track.setComments(decodeString(`${infoNode.COMMENT} / ${infoNode.RATING}`))
-  track.setProducer(decodeString(infoNode.PRODUCER))
-  track.setImportDateTime(
-    new Date(
-      `${infoNode.IMPORT_DATE.replaceAll('/', '-')} 00:00:00`
-    ).toISOString()
+  track.setComments(
+    decodeString(
+      `${infoNode?.COMMENT || ''}${
+        infoNode?.RATING ? '/' + infoNode?.RATING : ''
+      }`
+    )
   )
+  track.setProducer(decodeString(infoNode?.PRODUCER))
 
-  track.setGenre(decodeString(infoNode.GENRE))
+  infoNode?.IMPORT_DATE &&
+    track.setImportDateTime(
+      new Date(
+        `${infoNode.IMPORT_DATE.replaceAll('/', '-')} 00:00:00`
+      ).toISOString()
+    )
 
-  track.setType(/(?:\.([^.]+))?$/.exec(locationNode.FILE)[1].toLowerCase())
+  track.setGenre(decodeString(infoNode?.GENRE))
 
-  track.setLabel(decodeString(infoNode.LABEL))
+  track.setType(/(?:\.([^.]+))?$/.exec(locationNode?.FILE)[1].toLowerCase())
+
+  track.setLabel(decodeString(infoNode?.LABEL))
   // track.setCatalog(node.DiscNumber)
 
-  track.setMix(decodeString(infoNode.MIX))
-  track.setPlayCount(infoNode.PLAYCOUNT)
-  track.setRating(parseInt(infoNode.RANKING))
-  track.setRemixer(decodeString(infoNode.REMIXER))
+  track.setMix(decodeString(infoNode?.MIX))
+  track.setPlayCount(infoNode?.PLAYCOUNT)
+  track.setRating(parseInt(infoNode?.RANKING))
+  track.setRemixer(decodeString(infoNode?.REMIXER))
   //      track.setSampleRate(node.SampleRate * 1000)
   /** */
-  track.setPeakDb(parseFloat(loudnessNode.PEAK_DB))
-  track.setPerceivedDb(parseFloat(loudnessNode.PERCEIVED_DB))
-  track.setAnalyzedDb(parseFloat(loudnessNode.ANALYZED_DB))
+  track.setPeakDb(parseFloat(loudnessNode?.PEAK_DB))
+  track.setPerceivedDb(parseFloat(loudnessNode?.PERCEIVED_DB))
+  track.setAnalyzedDb(parseFloat(loudnessNode?.ANALYZED_DB))
   /** */
 
-  track.setSize(infoNode.FILESIZE)
+  track.setSize(infoNode?.FILESIZE)
 
   let openKey
-  switch (parseInt(keyNode.VALUE)) {
+  switch (parseInt(keyNode?.VALUE)) {
     case 0:
       openKey = '1d'
       break
@@ -173,31 +181,36 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
 
   track.setKey(openKey)
 
-  track.setDuration(parseFloat(infoNode.PLAYTIME_FLOAT) * 1000)
-
-  track.setId(trackId ? trackId : node.AUDIO_ID)
-  track.setTrackNumber(parseInt(albumNode?.TRACK))
-  track.setReleaseDate(moment(infoNode.RELEASE_DATE).format('YYYY-MM-DD'))
-
-  track.setModifiedDateTime(
-    `${moment(
-      `${node.MODIFIED_DATE} ${new Date(node.MODIFIED_TIME * 1000)
-        .toISOString()
-        .substr(11, 8)}`
-    ).toISOString()}`
+  track.setDuration(
+    infoNode?.PLAYTIME_FLOAT ? parseFloat(infoNode?.PLAYTIME_FLOAT) * 1000 : 1
   )
+
+  track.setId(trackId ? trackId : node?.AUDIO_ID)
+  track.setTrackNumber(parseInt(albumNode?.TRACK))
+  infoNode?.RELEASE_DATE &&
+    track.setReleaseDate(moment(infoNode?.RELEASE_DATE).format('YYYY-MM-DD'))
+
+  node?.MODIFIED_DATE &&
+    node?.MODIFIED_TIME &&
+    track.setModifiedDateTime(
+      `${moment(
+        `${node.MODIFIED_DATE} ${new Date(node.MODIFIED_TIME * 1000)
+          .toISOString()
+          .substr(11, 8)}`
+      ).toISOString()}`
+    )
 
   track.setHotCues(
     cueNodes.reduce((acum, cue) => {
       let cueAttr = cue.attributes
       let hotcue = new HotCue(
-        parseInt(cueAttr.HOTCUE),
-        parseFloat(cueAttr.START)
+        parseInt(cueAttr?.HOTCUE),
+        parseFloat(cueAttr?.START)
       )
-      hotcue.setEnd(parseFloat(cueAttr.START) + parseFloat(cueAttr.LEN))
-      hotcue.setType(parseInt(cueAttr.TYPE))
+      hotcue.setEnd(parseFloat(cueAttr?.START) + parseFloat(cueAttr?.LEN))
+      hotcue.setType(parseInt(cueAttr?.TYPE))
       let cueColor
-      switch (parseInt(cueAttr.TYPE)) {
+      switch (parseInt(cueAttr?.TYPE)) {
         case 0:
           cueColor = '#0000FF' // cue
           break
@@ -211,7 +224,7 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
           cueColor = '#FFFF00' // load
           break
         case 4:
-          track.setGridStart(parseFloat(cueAttr.START))
+          track.setGridStart(parseFloat(cueAttr?.START))
           cueColor = '#FFFFFF' // grid
           break
         case 5:
@@ -221,7 +234,7 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
           cueColor = false
       }
       hotcue.setColor(cueColor)
-      hotcue.setLabel(decodeString(cueAttr.NAME))
+      hotcue.setLabel(decodeString(cueAttr?.NAME))
       return [...acum, hotcue]
     }, [])
   )
@@ -229,9 +242,9 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   track.setMemoryCues(
     cueNodes.reduce((acum, cue) => {
       let cueAttr = cue.attributes
-      let hotcue = new MemoryCue(parseFloat(cueAttr.START))
-      hotcue.setEnd(parseFloat(cueAttr.START) + parseFloat(cueAttr.LEN))
-      hotcue.setLabel(decodeString(cueAttr.NAME))
+      let hotcue = new MemoryCue(parseFloat(cueAttr?.START))
+      hotcue.setEnd(parseFloat(cueAttr?.START) + parseFloat(cueAttr?.LEN))
+      hotcue.setLabel(decodeString(cueAttr?.NAME))
       return [...acum, hotcue]
     }, [])
   )
@@ -251,40 +264,40 @@ export async function createTrackFromRekordboxXML(xmlString, trackId = false) {
 
   track.setOriginalXml(xmlString)
 
-  track.setTitle(decodeString(node.Name))
-  track.setArtist(decodeString(node.Artist))
-  track.setAlbum(decodeString(node.Album))
-  track.setBpm(parseFloat(node.AverageBpm))
-  track.setBitRate(parseInt(node.BitRate * 1000))
-  track.setColor(node.Colour?.replaceAll('0x', '#'))
-  track.setComments(decodeString(node.Comments))
-  track.setProducer(decodeString(node.Composer))
+  track.setTitle(decodeString(node?.Name))
+  track.setArtist(decodeString(node?.Artist))
+  track.setAlbum(decodeString(node?.Album))
+  track.setBpm(parseFloat(node?.AverageBpm))
+  track.setBitRate(parseInt(node?.BitRate * 1000))
+  track.setColor(node?.Colour?.replaceAll('0x', '#'))
+  track.setComments(decodeString(node?.Comments))
+  track.setProducer(decodeString(node?.Composer))
   track.setImportDateTime(
-    node.DateAdded
+    node?.DateAdded
       ? new Date(`${node.DateAdded} 00:00:00`).toISOString()
       : false
   )
-  track.setCatalog(decodeString(node.DiscNumber))
-  track.setGenre(decodeString(node.Genre))
-  track.setColor(node.Grouping) /* TODO: get hex color name */
-  track.setType(node.Kind)
-  track.setLabel(decodeString(node.Label))
-  track.setMix(decodeString(node.Mix))
-  track.setPlayCount(parseInt(node.PlayCount))
-  track.setRating(parseInt(node.Rating))
-  track.setRemixer(decodeString(node.Remixer))
-  track.setSampleRate(parseInt(node.SampleRate * 1000))
-  track.setSize(parseFloat(node.Size))
-  track.setKey(getOpenKey(node.Tonality))
-  track.setDuration(parseFloat(node.TotalTime * 1000))
-  track.setId(trackId ? trackId : decodeString(node.TrackID))
-  track.setTrackNumber(parseInt(node.TrackNumber))
+  track.setCatalog(decodeString(node?.DiscNumber))
+  track.setGenre(decodeString(node?.Genre))
+  track.setColor(node?.Grouping) /* TODO: get hex color name */
+  track.setType(node?.Kind)
+  track.setLabel(decodeString(node?.Label))
+  track.setMix(decodeString(node?.Mix))
+  track.setPlayCount(parseInt(node?.PlayCount))
+  track.setRating(parseInt(node?.Rating))
+  track.setRemixer(decodeString(node?.Remixer))
+  track.setSampleRate(parseInt(node?.SampleRate * 1000))
+  track.setSize(parseFloat(node?.Size))
+  track.setKey(getOpenKey(node?.Tonality))
+  track.setDuration(parseFloat(node?.TotalTime * 1000))
+  track.setId(trackId ? trackId : decodeString(node?.TrackID))
+  track.setTrackNumber(parseInt(node?.TrackNumber))
   track.setReleaseDate(
     node.Year?.toString().length === 4 ? `${node.Year}-01-01` : null
   )
   let firstTempoNode = trackNode.getElementsByTagName('TEMPO')[0]
   if (firstTempoNode) {
-    track.setGridStart(parseFloat(firstTempoNode.attributes.Inizio))
+    track.setGridStart(parseFloat(firstTempoNode?.attributes.Inizio))
   }
   track.setHotCues(
     trackNode

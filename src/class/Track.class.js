@@ -179,10 +179,11 @@ export class Track {
           ${attr('DiscNumber', this.catalog)} ${attr(
         'TrackNumber',
         this.trackNumber
-      )} ${attr('Year', moment(this.releaseDate).format('YYYY'))} ${attr(
-        'AverageBpm',
-        this.bpm
-      )} ${attr(
+      )} ${
+        this.releaseDate
+          ? attr('Year', moment(this.releaseDate).format('YYYY'))
+          : ''
+      } ${attr('AverageBpm', this.bpm)} ${attr(
         'DateAdded',
         this.importDateTime
           ? moment(this.importDateTime).format('YYYY-MM-DD')
@@ -202,15 +203,19 @@ export class Track {
         'Colour',
         this.color?.replace('#', '0x')
       )}>` +
-      `<TEMPO Inizio="${this.gridStart}" Bpm="${this.bpm}" Metro="4/4" Battito="1" />` +
-      (this.hotCues.length > 0 &&
-        this.hotCues.reduce((acum, curr) => {
-          return acum + curr.exportAsRekordbox()
-        }, '')) +
-      (this.memoryCues.length > 0 &&
-        this.memoryCues.reduce((acum, curr) => {
-          return acum + curr.exportAsRekordbox()
-        }, '')) +
+      (this.gridStart && this.bpm
+        ? `<TEMPO Inizio="${this.gridStart}" Bpm="${this.bpm}" Metro="4/4" Battito="1" />`
+        : '') +
+      (this.hotCues.length > 0
+        ? this.hotCues.reduce((acum, curr) => {
+            return acum + curr.exportAsRekordbox()
+          }, '')
+        : '') +
+      (this.memoryCues.length > 0
+        ? this.memoryCues.reduce((acum, curr) => {
+            return acum + curr.exportAsRekordbox()
+          }, '')
+        : '') +
       '</TRACK>'
     )
   }

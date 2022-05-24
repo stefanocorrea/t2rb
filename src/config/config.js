@@ -40,7 +40,7 @@ configObject.set(
   path.join(
     isDev ? path.resolve('./') : window.process.resourcesPath,
     'extra_resources',
-    'dj-data-converter.exe'
+    'dj-data-converter'
   )
 )
 

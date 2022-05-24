@@ -261,8 +261,8 @@ export class AppContextProvider extends React.Component {
         this.addNotConvertedTracks(track, error)
         this.recursiveConvertMusicIndex(nextIndex)
       } else {
-        let windowsCLI = `cd "${tempDir}" && "${djDataConverterLocation}" "${tempTrackNmlLocation}"`
-        exec(windowsCLI, (error, stdout, stderr) => {
+        let cli = `cd "${tempDir}" && "${djDataConverterLocation}" "${tempTrackNmlLocation}"`
+        exec(cli, (error, stdout, stderr) => {
           if (error) {
             this.addWorkDoneSteps()
             this.addNotConvertedTracks(track, error)
@@ -276,20 +276,25 @@ export class AppContextProvider extends React.Component {
                   this.addWorkDoneSteps()
                   this.addNotConvertedTracks(track, error)
                   this.recursiveConvertMusicIndex(nextIndex)
+                } else {
+                  let trackConverted = await createTrackFromRekordboxXML(
+                    tempTrackDjDataConverterContentXml
+                      .replace(/(.*)(?=\<TRACK)/gim, '')
+                      .replace(/(?<=TRACK\>)(.*)/gim, '')
+                  )
+
+                  if (trackConverted.location) {
+                    track.setGridStart(trackConverted.gridStart)
+                    track.setHotCues(trackConverted.hotCues)
+                    track.setLocation(trackConverted.location)
+                    track.setMemoryCues(trackConverted.memoryCues)
+                    this.addConvertedTracks(track)
+                  } else {
+                    this.addNotConvertedTracks(track, error)
+                  }
+                  this.addWorkDoneSteps()
+                  this.recursiveConvertMusicIndex(nextIndex)
                 }
-
-                let trackConverted = await createTrackFromRekordboxXML(
-                  tempTrackDjDataConverterContentXml
-                    .replace(/(.*)(?=\<TRACK)/gim, '')
-                    .replace(/(?<=TRACK\>)(.*)/gim, '')
-                )
-
-                track.setGridStart(trackConverted.gridStart)
-                track.setHotCues(trackConverted.hotCues)
-                track.setMemoryCues(trackConverted.memoryCues)
-                this.addWorkDoneSteps()
-                this.addConvertedTracks(track)
-                this.recursiveConvertMusicIndex(nextIndex)
               }
             )
           }

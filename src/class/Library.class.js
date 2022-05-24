@@ -51,8 +51,8 @@ export class Library {
           let track = new Track(location)
 
           //      console.log(location)
-          let aaa = this.getTrackByLocation(location)
-          //track.setId(this.getTrackByLocation(location).id)
+          let trackInLibrary = this.getTrackByLocation(location)
+          trackInLibrary && track.setId(trackInLibrary.id)
 
           a.addTrack(track)
           return true
