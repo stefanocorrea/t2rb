@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<NML VERSION="19">
+	<HEAD COMPANY="www.native-instruments.com" PROGRAM="Traktor">
+	</HEAD>
+	<COLLECTION ENTRIES="1">
+		<ENTRY MODIFIED_DATE="" MODIFIED_TIME="" AUDIO_ID="" TITLE="" ARTIST="">
+			<LOCATION DIR="" FILE="" VOLUME="" VOLUMEID="">
+			</LOCATION>
+			<INFO BITRATE="" GENRE="" LABEL="" COMMENT="" KEY_LYRICS="" RATING="" REMIXER="" PRODUCER="" MIX="" KEY="" PLAYTIME="" PLAYTIME_FLOAT="" RANKING="" IMPORT_DATE="" RELEASE_DATE="" FLAGS="" FILESIZE="" COLOR="2">
+			</INFO>
+			<ALBUM TRACK="" TITLE="">
+			</ALBUM>
+			<MODIFICATION_INFO AUTHOR_TYPE="user">
+			</MODIFICATION_INFO>
+			<TEMPO BPM="" BPM_QUALITY="">
+			</TEMPO>
+			<LOUDNESS PEAK_DB="" PERCEIVED_DB="" ANALYZED_DB="">
+			</LOUDNESS>
+			<MUSICAL_KEY VALUE="">
+			</MUSICAL_KEY>
+			<CUE_V2 NAME="" DISPL_ORDER="" TYPE="" START="" LEN="" REPEATS="" HOTCUE="">
+			</CUE_V2>
+			<CUE_V2 NAME="" DISPL_ORDER="" TYPE="" START="" LEN="" REPEATS="" HOTCUE="">
+			</CUE_V2>
+			<CUE_V2 NAME="" DISPL_ORDER="" TYPE="" START="" LEN="" REPEATS="" HOTCUE="">
+			</CUE_V2>
+			<CUE_V2 NAME="" DISPL_ORDER="" TYPE="" START="" LEN="" REPEATS="" HOTCUE="">
+			</CUE_V2>
+		</ENTRY>
+	</COLLECTION>
+	<PLAYLISTS>
+		<NODE TYPE="FOLDER" NAME="$ROOT">
+			<SUBNODES COUNT="29">
+				<NODE TYPE="FOLDER" NAME="$ROOT">
+					<SUBNODES COUNT="29">
+						<NODE TYPE="PLAYLIST" NAME="playlist direto da root">
+							<PLAYLIST ENTRIES="42" TYPE="LIST" UUID="7509ef47fe564e9da50f9eef7af117f4">
+								<ENTRY>
+									<PRIMARYKEY TYPE="TRACK" KEY="">
+									</PRIMARYKEY>
+								</ENTRY>
+								<ENTRY>
+									<PRIMARYKEY TYPE="TRACK" KEY="">
+									</PRIMARYKEY>
+								</ENTRY>
+								<ENTRY>
+									<PRIMARYKEY TYPE="TRACK" KEY="">
+									</PRIMARYKEY>
+								</ENTRY>
+							</PLAYLIST>
+						</NODE>
+						<NODE TYPE="PLAYLIST" NAME="playlist direto da root">
+							<PLAYLIST ENTRIES="42" TYPE="LIST" UUID="7509ef47fe564e9da50f9eef7af117f4">
+								<ENTRY>
+									<PRIMARYKEY TYPE="TRACK" KEY="">
+									</PRIMARYKEY>
+								</ENTRY>
+								<ENTRY>
+									<PRIMARYKEY TYPE="TRACK" KEY="">
+									</PRIMARYKEY>
+								</ENTRY>
+							</PLAYLIST>
+						</NODE>
+					</SUBNODES>
+				</NODE>
+				<NODE TYPE="PLAYLIST" NAME="playlist direto da root">
+					<PLAYLIST ENTRIES="42" TYPE="LIST" UUID="7509ef47fe564e9da50f9eef7af117f4">
+						<ENTRY>
+							<PRIMARYKEY TYPE="TRACK" KEY="">
+							</PRIMARYKEY>
+						</ENTRY>
+						<ENTRY>
+							<PRIMARYKEY TYPE="TRACK" KEY="">
+							</PRIMARYKEY>
+						</ENTRY>
+						<ENTRY>
+							<PRIMARYKEY TYPE="TRACK" KEY="">
+							</PRIMARYKEY>
+						</ENTRY>
+					</PLAYLIST>
+				</NODE>
+			</SUBNODES>
+		</NODE>
+	</PLAYLISTS>
+</NML>

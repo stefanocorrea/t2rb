@@ -1,0 +1,41 @@
+{:args
+ {:input-file "D:/www/t2rb/dj-data-converter/TraktorSingleEntry0.nml"},
+ :opts {},
+ :error
+ {:via
+  [{:type java.io.FileNotFoundException,
+    :message
+    "D:\\www\\t2rb\\dj-data-converter\\TraktorSingleEntry0.nml (O sistema não pode encontrar o arquivo especificado)",
+    :at
+    [com.oracle.svm.jni.JNIJavaCallWrappers
+     jniInvoke_VA_LIST:Ljava_io_FileNotFoundException_2_0002e_0003cinit_0003e_00028Ljava_lang_String_2Ljava_lang_String_2_00029V
+     "JNIJavaCallWrappers.java"
+     0]}],
+  :trace
+  [[com.oracle.svm.jni.JNIJavaCallWrappers
+    jniInvoke_VA_LIST:Ljava_io_FileNotFoundException_2_0002e_0003cinit_0003e_00028Ljava_lang_String_2Ljava_lang_String_2_00029V
+    "JNIJavaCallWrappers.java"
+    0]
+   [java.io.FileInputStream open0 "FileInputStream.java" -1]
+   [java.io.FileInputStream open "FileInputStream.java" 219]
+   [java.io.FileInputStream <init> "FileInputStream.java" 157]
+   [clojure.java.io$fn__11510 invokeStatic "io.clj" 229]
+   [clojure.java.io$fn__11510 invoke "io.clj" 229]
+   [clojure.java.io$fn__11423$G__11416__11430 invoke "io.clj" 69]
+   [clojure.java.io$fn__11522 invokeStatic "io.clj" 258]
+   [clojure.java.io$fn__11522 invoke "io.clj" 254]
+   [clojure.java.io$fn__11423$G__11416__11430 invoke "io.clj" 69]
+   [clojure.java.io$fn__11484 invokeStatic "io.clj" 165]
+   [clojure.java.io$fn__11484 invoke "io.clj" 165]
+   [clojure.java.io$fn__11436$G__11412__11443 invoke "io.clj" 69]
+   [clojure.java.io$reader invokeStatic "io.clj" 102]
+   [clojure.java.io$reader doInvoke "io.clj" 86]
+   [clojure.lang.RestFn invoke "RestFn.java" 410]
+   [converter.cli$process invokeStatic "cli.cljc" 86]
+   [converter.cli$process invoke "cli.cljc" 80]
+   [converter.cli$_main invokeStatic "cli.cljc" 129]
+   [converter.cli$_main doInvoke "cli.cljc" 124]
+   [clojure.lang.RestFn applyTo "RestFn.java" 137]
+   [converter.cli main nil -1]],
+  :cause
+  "D:\\www\\t2rb\\dj-data-converter\\TraktorSingleEntry0.nml (O sistema não pode encontrar o arquivo especificado)"}}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DJ_PLAYLISTS Version="1.0.0">
+	<PRODUCT Name="rekordbox" Version="6.6.3" Company="AlphaTheta" />
+	<COLLECTION Entries="25">
+		<TRACK TrackID="66518598" Name="Say My Name (Gold Lemonade Tech House Remix)" Artist="Destiny&apos;s Child" Composer="nome do compositor" Album="nome do album" Grouping="Purple" Genre="tech house" Kind="MP3 File" Size="8421262" TotalTime="209" DiscNumber="0" TrackNumber="0" Year="0" AverageBpm="128.00" DateAdded="2022-05-07" BitRate="320" SampleRate="44100" Comments="" PlayCount="0" Rating="153" Location="file://localhost/D:/www/t2rb/Destiny%27s%20Child%20-%20Say%20My%20Name%20(Gold%20Lemonade%20Tech%20House%20Remix).mp3" Remixer="nome do remixer" Tonality="Fm" Label="nome do label" Mix="nome do mx" Colour="0x660099">
+			<TEMPO Inizio="0.055" Bpm="128.00" Metro="4/4" Battito="1" />
+			<POSITION_MARK Name="primeiro cue" Type="0" Start="1.004" Num="0" Red="0" Green="224" Blue="255" />
+			<POSITION_MARK Name="cue de loop" Type="4" Start="1.004" End="4.754" Num="1" Red="180" Green="50" Blue="255" />
+			<POSITION_MARK Name="" Type="4" Start="171.548" End="173.423" Num="2" Red="170" Green="114" Blue="255" />
+			<POSITION_MARK Name="primemiro memory" Type="0" Start="0.000" Num="-1" />
+		</TRACK>
+		<TRACK TrackID="39202348" Name="caralho-o-maluco-e-bravo" Artist="" Composer="" Album="" Grouping="Pink" Genre="" Kind="MP3 File" Size="146122" TotalTime="3" DiscNumber="0" TrackNumber="0" Year="0" AverageBpm="72.80" DateAdded="2022-05-11" BitRate="320" SampleRate="48000" Comments="" PlayCount="0" Rating="0" Location="file://localhost/C:/Users/Stefano/Music/caralho-o-maluco-e-bravo.mp3" Remixer="" Tonality="F#m" Label="" Mix="" Colour="0xFF007F">
+			<TEMPO Inizio="0.068" Bpm="72.80" Metro="4/4" Battito="1" />
+		</TRACK>
+		<TRACK TrackID="14793248" Name="so faltou vc" Artist="" Composer="" Album="" Grouping="Red" Genre="" Kind="MP3 File" Size="131371" TotalTime="5" DiscNumber="0" TrackNumber="0" Year="0" AverageBpm="83.87" DateAdded="2022-05-11" BitRate="192" SampleRate="48000" Comments="" PlayCount="0" Rating="0" Location="file://localhost/C:/Users/Stefano/Music/so%20faltou%20vc.mp3" Remixer="" Tonality="Dm" Label="" Mix="" Colour="0xFF0000">
+			<TEMPO Inizio="0.619" Bpm="83.87" Metro="4/4" Battito="1" />
+		</TRACK>
+	</COLLECTION>
+	<PLAYLISTS>
+		<NODE Type="0" Name="ROOT" Count="2">
+			<NODE Name="folder1" Type="0" Count="2">
+				<NODE Name="subfolder1" Type="0" Count="0" />
+				<NODE Name="subplaylist1" Type="1" KeyType="0" Entries="2">
+					<TRACK Key="48183414" />
+					<TRACK Key="18736008" />
+				</NODE>
+			</NODE>
+			<NODE Name="playlist1" Type="1" KeyType="0" Entries="2">
+				<TRACK Key="253691750" />
+				<TRACK Key="128338668" />
+			</NODE>
+		</NODE>
+	</PLAYLISTS>
+</DJ_PLAYLISTS>
