@@ -44,12 +44,34 @@
     "appId": "com.example.electron-cra",
     "win": {
       "icon": "./public/icon/png/512.png",
-      "target": "portable"
+      "target": [
+        {
+          "target": "portable"
+        }
+      ],
+      "extraResources": [
+        {
+          "from": "extra_resources_build/win/",
+          "to": "extra_resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "mac": {
       "icon": "./public/icon/icns/512.icns",
       "category": "public.app-category.music",
-      "target": "dmg"
+      "target": "dmg",
+      "extraResources": [
+        {
+          "from": "extra_resources_build/mac/",
+          "to": "extra_resources",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
     },
     "files": [
       "dist/**/*",
@@ -59,16 +81,7 @@
     ],
     "directories": {
       "buildResources": "assets"
-    },
-    "extraResources": [
-      {
-        "from": "extra_resources/",
-        "to": "extra_resources",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ]
+    }
   },
   "eslintConfig": {
     "extends": [

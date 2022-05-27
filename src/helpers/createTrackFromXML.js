@@ -23,9 +23,9 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
 
   let track = new Track(
     decodeString(
-      `${locationNode.VOLUME}${locationNode.DIR.replaceAll('/:', '/')}${
-        locationNode.FILE
-      }`
+      `${
+        locationNode.VOLUME !== locationNode.VOLUMEID ? locationNode.VOLUME : ''
+      }${locationNode.DIR.replaceAll('/:', '/')}${locationNode.FILE}`
     )
   )
 
