@@ -1,5 +1,5 @@
 export const screen = {
-  confi: 'config',
+  config: 'config',
   main: 'main',
   working: 'working',
   firstRun: 'first-run',

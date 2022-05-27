@@ -1,33 +1,40 @@
 import * as React from 'react'
-import AppBar from '@mui/material/AppBar'
+
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import Badge from '@mui/material/Badge'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import MailIcon from '@mui/icons-material/Mail'
-import NotificationsIcon from '@mui/icons-material/Notifications'
+import CancelIcon from '@mui/icons-material/Cancel'
 import SettingsIcon from '@mui/icons-material/Settings'
-import AppContext from '../context/app.context'
+import { AppContext } from '../context/app.context'
+import { screen } from '../config/screens'
+import { Button } from '@mui/material'
+import { FormattedMessage } from 'react-intl'
+import LanguageIconSelect from './LanguageIconSelect'
 
 export class AppConfigBar extends React.Component {
   render() {
     return (
       <AppContext.Consumer>
-        {({ goToConfigScreen }) => (
-          <AppBar position="static">
-            <Toolbar>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { sm: 'block' } }}
-              >
-                T2R
-              </Typography>
+        {({ activeScreen, goToConfigScreen, abortTheMagic, isPreparing }) => (
+          <Toolbar>
+            <Box sx={{ flexGrow: 1 }} />
 
-              <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ display: { md: 'flex' } }} mx={1}>
+              <LanguageIconSelect soft />
+            </Box>
+
+            {activeScreen === screen.working ? (
+              <Box sx={{ display: { md: 'flex' } }}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => abortTheMagic('canceled-by-user')}
+                  startIcon={<CancelIcon />}
+                >
+                  <FormattedMessage id="cancel" />
+                </Button>
+              </Box>
+            ) : (
               <Box sx={{ display: { md: 'flex' } }}>
                 <IconButton
                   size="large"
@@ -38,8 +45,9 @@ export class AppConfigBar extends React.Component {
                   <SettingsIcon />
                 </IconButton>
               </Box>
-            </Toolbar>
-          </AppBar>
+            )}
+          </Toolbar>
+          // </AppBar>
         )}
       </AppContext.Consumer>
     )

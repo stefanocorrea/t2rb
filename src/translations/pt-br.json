@@ -1,0 +1,51 @@
+{
+  "language": {
+    "title": "Definição de idioma",
+    "selected": "Idioma ativo"
+  },
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "canceled": "Cancelado",
+  "convert-library": "Do the Magic!",
+  "canceled-by-user": "Cancelado por você",
+  "music": "Track",
+  "of": "de",
+  "remaining": "restantes",
+  "converted-entire-library-in": "Coleção convertida em",
+  "process-completed": "Processo completo",
+  "not-converted": {
+    "tracks": {
+      "title": "tracks não foram convertidas",
+      "reasons": {
+        "not-found": "Arquivo não encontrado",
+        "corrupted": "Arquivo corrompido",
+        "playtime": "Track sem playtime",
+        "analysis": "Não pode ser analisada"
+      }
+    }
+  },
+  "by": "por",
+  "preparing-to-start": "Preparando início...",
+  "invalid-traktor-file": "Arquivo Traktor inválido",
+  "set": { "file": "Definir arquivo", "location": "Definir local" },
+  "change": { "file": "Alterar arquivo", "location": "Alterar local" },
+  "config": {
+    "title": "Configurações",
+    "fields": {
+      "rekordbox": {
+        "file": {
+          "label": "Arquivo Rekordbox exportado",
+          "description": "Defina um local em que o arquivo convertido será salvo",
+          "invalid-file": "Inválido. Salve com formato \".xml\""
+        }
+      },
+      "traktor": {
+        "file": {
+          "label": "Arquivo Traktor",
+          "description": "Selecione o arquivo de coleção do Traktor",
+          "invalid-file": "inválido. O arquivo de coleção do Traktor é de formato \".nml\""
+        }
+      }
+    }
+  }
+}

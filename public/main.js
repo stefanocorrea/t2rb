@@ -12,20 +12,24 @@ require('@electron/remote/main').initialize()
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    center: true,
-    minWidth: 300,
-    minHeight: 200,
     movable: true,
-    maximizable: false,
+    maximizable: true,
     closable: true,
-    title: 'T2RB',
     autoHideMenuBar: true,
     enableLargerThanScreen: false,
     backgroundColor: 'rgb(240,240,240)',
     darkTheme: true,
     allowRunningInsecureContent: true,
+    width: 800,
+    height: 600,
+    center: true,
+    minWidth: 300,
+    minHeight: 200,
+    title: 'Traktbox',
+    backgroundColor: 'rgb(0,0,0)',
+    icon: path.join(__dirname, '../public/icon/png/512.png'),
+    allowRunningInsecureContent: true,
+
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true

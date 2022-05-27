@@ -1,0 +1,10 @@
+.langBtn {
+  filter: grayscale(1);
+  opacity: 0.5;
+  transition: 0.3s;
+}
+
+.langBtn:hover {
+  filter: grayscale(0);
+  opacity: 1;
+}

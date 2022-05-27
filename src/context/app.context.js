@@ -3,14 +3,15 @@ import { screen } from '../config/screens.js'
 import { config } from '../config/config.js'
 import { Library } from '../class/Library.class.js'
 import { createTrackFromRekordboxXML } from '..//helpers/createTrackFromXML.js'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import { IntlContext } from '../context/intl.context'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { IntlProvider, useIntl } from 'react-intl'
 
 import moment from 'moment'
 
 const fs = window.require('fs')
 const { exec } = window.require('child_process')
-const AppContext = createContext({})
+export const AppContext = createContext({})
 const path = window.require('path')
 const tempDir = config.get('tempDir').replace(/\\/g, '/')
 const tempTrackNmlLocation = path
@@ -24,7 +25,12 @@ const djDataConverterLocation = config
   .get('djDataConverter')
   .replace(/\\/g, '/')
 
-export class AppContextProvider extends React.Component {
+export class App extends React.Component {
+  componentDidMount() {
+    this.setTraktorFile(config.get('traktor'))
+    this.setRekordboxFile(config.get('rekordbox'))
+  }
+
   exampleToggleStatus = e => {
     this.setState({ exampleStatus: e })
   }
@@ -33,26 +39,70 @@ export class AppContextProvider extends React.Component {
     this.setState({ activeScreen: screen })
   }
 
-  setTraktorFile = location => {
-    if (!location) return
+  validateTraktorFile = () => {
+    let isValid = true
+    let invalidMsg = ''
 
-    console.log(location)
-    let newLocationName = location[0].replace(/\\/g, '/')
-    config.set('traktor', newLocationName)
+    if (!/.nml$/gims.exec(this.state.traktorFile)) {
+      isValid = false
+      invalidMsg = 'config.fields.traktor.file.invalid-file'
+    }
+
+    /* Validade if the NML file content is valid */
+    if (false) {
+    }
+
     this.setState({
-      traktorFile: newLocationName,
-      snackSuccess: 'Campo Atualizado'
+      validTraktorFile: isValid,
+      descriptionInvalidTraktorFile: invalidMsg
     })
+    this.configValid()
   }
 
-  setRekorboxFile = location => {
+  validateRekordboxFile = () => {
+    let isValid = true
+    let invalidMsg = ''
+
+    if (!/.xml$/gims.exec(this.state.rekordboxFile)) {
+      isValid = false
+      invalidMsg = 'config.fields.rekordbox.file.invalid-file'
+    }
+
+    /* Validade if the NML file content is valid */
+    if (false) {
+    }
+
+    /* TODO validade rekordbox file */
+    this.setState({
+      validRekordboxFile: isValid,
+      descriptionInvalidRekordboxFile: invalidMsg
+    })
+    this.configValid()
+  }
+
+  setTraktorFile = async location => {
+    if (!location) return
+
+    let newLocationName = location.toString().replace(/\\/g, '/')
+
+    config.set('traktor', newLocationName)
+    await this.setState({
+      traktorFile: newLocationName
+    })
+
+    this.validateTraktorFile()
+  }
+
+  setRekordboxFile = async location => {
     if (!location) return
     let newLocationName = location.replace(/\\/g, '/')
+
     config.set('rekordbox', newLocationName)
-    this.setState({
-      rekorboxFile: newLocationName,
-      snackSuccess: 'Campo Atualizado'
+    await this.setState({
+      rekordboxFile: newLocationName
     })
+
+    this.validateRekordboxFile()
   }
 
   setReadyToWork = boolean => {
@@ -63,8 +113,12 @@ export class AppContextProvider extends React.Component {
     this.setState({ workingStatus: boolean })
   }
 
-  setWorkingMsg = string => {
-    this.setState({ workingMsg: string })
+  setWorkingMsg = msgId => {
+    this.setState({ workingMsg: msgId })
+  }
+
+  setWorkingTrack = string => {
+    this.setState({ workingTrack: string })
   }
 
   addTrackToConvert = trackObject => {
@@ -97,17 +151,17 @@ export class AppContextProvider extends React.Component {
     })
   }
 
-  addWorkDoneSteps = () => {
-    this.setState({
+  addWorkDoneSteps = async () => {
+    await this.setState({
       workDoneSteps: this.state.workDoneSteps + 1
     })
   }
 
-  addNotConvertedTracks = (trackObject, error) => {
+  addNotConvertedTracks = (trackObject, reason) => {
     this.setState({
       notConvertedTracks: [
         ...this.state.notConvertedTracks,
-        { track: trackObject, error: error }
+        { track: trackObject, reason: reason }
       ]
     })
   }
@@ -138,27 +192,24 @@ export class AppContextProvider extends React.Component {
 
   doTheMagic = () => {
     this.setScreen(screen.working)
-    this.setWorkingMsg('Iniciando sync')
+    this.setWorkingMsg('preparing-to-start')
     this.resetWorkInfos()
     this.setWorkingStatus(true)
+
     this.setState({
-      startDateTime: moment()
+      // startDateTime: moment(),
+      isPreparing: true
     })
     setTimeout(() => {
       this.convertTracks()
     }, 500)
   }
 
-  abortTheMagic = msg => {
+  abortTheMagic = msgId => {
     this.setScreen(screen.workCanceled)
+
     this.setWorkingStatus(false)
-    this.setWorkingMsg(msg)
-
-    setTimeout(() => {
-      this.setScreen(screen.main)
-
-      this.resetWorkInfos()
-    }, 3000)
+    this.setWorkingMsg(msgId)
   }
 
   workInPlaylists = () => {
@@ -186,19 +237,18 @@ export class AppContextProvider extends React.Component {
       finishDateTime: moment(),
       elapsedTimeSeconds: moment().diff(this.state.startDateTime, 'seconds')
     })
-    this.setWorkingMsg('Work complete')
-    this.setScreen(screen.workComplete)
+    this.setWorkingMsg('process-completed')
 
     setTimeout(() => {
-      this.goToMainScreen()
-    }, 6000)
+      this.setScreen(screen.workComplete)
+    }, 1000)
 
     return true
   }
 
   exportEverythingToRekordboxFile = async () => {
     await fs.writeFileSync(
-      this.state.rekorboxFile.replace(/\\/g, '/'),
+      this.state.rekordboxFile.replace(/\\/g, '/'),
       this.state.library.export('rekordbox')
     )
     this.addWorkDoneSteps()
@@ -211,8 +261,7 @@ export class AppContextProvider extends React.Component {
 
     let xmlLibraryString = fs.readFileSync(traktorFile, 'utf-8')
     traktor.importLibrary(xmlLibraryString)
-    if (!traktor)
-      return this.abortTheMagic('sorry have to cancel... cant import NML file')
+    if (!traktor) return this.abortTheMagic('invalid-traktor-file')
 
     /* add step of work for every track. Since tracks takes long to convert */
     traktor.collection.map(() => this.addWorkSteps())
@@ -234,6 +283,10 @@ export class AppContextProvider extends React.Component {
     }
 
     if (traktor.collection.length) {
+      this.setState({
+        startDateTime: moment(),
+        isPreparing: false
+      })
       this.recursiveConvertMusicIndex(0)
     }
 
@@ -241,6 +294,9 @@ export class AppContextProvider extends React.Component {
   }
 
   recursiveConvertMusicIndex = index => {
+    this.setState({
+      elapsedTimeSeconds: moment().diff(this.state.startDateTime, 'seconds')
+    })
     if (!this.state.workingStatus) return
 
     if (index > this.state.tracksToConvert.length - 1)
@@ -248,69 +304,111 @@ export class AppContextProvider extends React.Component {
 
     let nextIndex = index + 1
     let track = this.state.tracksToConvert[index]
-    this.setWorkingMsg(
-      `${index + 1}/${this.state.tracksToConvert.length} - ${track.artist} - ${
-        track.title
-      }`
+    this.setWorkingMsg(false)
+    this.setWorkingTrack(
+      track.title
+        ? `${track.artist ? track.artist + ' - ' : ''}${track.title}`
+        : track.location.replace(/.*\//gims, '')
     )
-    let tempTrackNmlContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?><NML VERSION="19"><HEAD COMPANY="www.native-instruments.com" PROGRAM="Traktor"></HEAD><COLLECTION Entries="1">${track.originalXml}</COLLECTION></NML>`
 
-    fs.writeFile(tempTrackNmlLocation, tempTrackNmlContent, (error, data) => {
+    fs.readFile(track.location, 'utf-8', async error => {
       if (error) {
         this.addWorkDoneSteps()
-        this.addNotConvertedTracks(track, error)
+
+        this.addNotConvertedTracks(
+          track,
+          'not-converted.tracks.reasons.not-found'
+        )
         this.recursiveConvertMusicIndex(nextIndex)
       } else {
-        let cli = `cd "${tempDir}" && "${djDataConverterLocation}" "${tempTrackNmlLocation}"`
-        exec(cli, (error, stdout, stderr) => {
-          if (error) {
-            this.addWorkDoneSteps()
-            this.addNotConvertedTracks(track, error)
-            this.recursiveConvertMusicIndex(nextIndex)
-          } else {
-            fs.readFile(
-              tempTrackDjDataConverterLocation,
-              'utf-8',
-              async (error, tempTrackDjDataConverterContentXml) => {
+        let tempTrackNmlContent = `<?xml version="1.0" encoding="UTF-8" standalone="no"?><NML VERSION="19"><HEAD COMPANY="www.native-instruments.com" PROGRAM="Traktor"></HEAD><COLLECTION Entries="1">${track.originalXml}</COLLECTION></NML>`
+
+        fs.writeFile(
+          tempTrackNmlLocation,
+          tempTrackNmlContent,
+          (error, data) => {
+            if (error) {
+              this.addWorkDoneSteps()
+              this.addNotConvertedTracks(
+                track,
+                'not-converted.tracks.reasons.analysis'
+              )
+              this.recursiveConvertMusicIndex(nextIndex)
+            } else {
+              let cli = `cd "${tempDir}" && "${djDataConverterLocation}" "${tempTrackNmlLocation}"`
+              exec(cli, (error, stdout, stderr) => {
                 if (error) {
                   this.addWorkDoneSteps()
-                  this.addNotConvertedTracks(track, error)
+                  this.addNotConvertedTracks(
+                    track,
+                    'not-converted.tracks.reasons.analysis'
+                  )
                   this.recursiveConvertMusicIndex(nextIndex)
                 } else {
-                  let trackConverted = await createTrackFromRekordboxXML(
-                    tempTrackDjDataConverterContentXml
-                      .replace(/(.*)(?=\<TRACK)/gim, '')
-                      .replace(/(?<=TRACK\>)(.*)/gim, '')
-                  )
+                  fs.readFile(
+                    tempTrackDjDataConverterLocation,
+                    'utf-8',
+                    async (error, tempTrackDjDataConverterContentXml) => {
+                      if (error) {
+                        this.addWorkDoneSteps()
+                        this.addNotConvertedTracks(
+                          track,
+                          'not-converted.tracks.reasons.analysis'
+                        )
+                        this.recursiveConvertMusicIndex(nextIndex)
+                      } else {
+                        let trackConverted = await createTrackFromRekordboxXML(
+                          tempTrackDjDataConverterContentXml
+                            .replace(/(.*)(?=\<TRACK)/gim, '')
+                            .replace(/(?<=TRACK\>)(.*)/gim, '')
+                        )
 
-                  if (trackConverted.location) {
-                    track.setGridStart(trackConverted.gridStart)
-                    track.setHotCues(trackConverted.hotCues)
-                    track.setLocation(trackConverted.location)
-                    track.setMemoryCues(trackConverted.memoryCues)
-                    this.addConvertedTracks(track)
-                  } else {
-                    this.addNotConvertedTracks(track, error)
-                  }
-                  this.addWorkDoneSteps()
-                  this.recursiveConvertMusicIndex(nextIndex)
+                        if (trackConverted.location) {
+                          track.setGridStart(trackConverted.gridStart)
+                          track.setHotCues(trackConverted.hotCues)
+                          track.setLocation(trackConverted.location)
+                          track.setMemoryCues(trackConverted.memoryCues)
+                          this.addConvertedTracks(track)
+                        } else {
+                          this.addNotConvertedTracks(
+                            track,
+                            'not-converted.tracks.reasons.analysis'
+                          )
+                        }
+                        this.addWorkDoneSteps()
+                        this.recursiveConvertMusicIndex(nextIndex)
+                      }
+                    }
+                  )
                 }
-              }
-            )
+              })
+            }
           }
-        })
+        )
       }
     })
+  }
+
+  configValid = () => {
+    if (!this.state.validTraktorFile || !this.state.validRekordboxFile) {
+      this.setScreen(screen.config)
+    }
+
+    if (this.state.validTraktorFile && this.state.validRekordboxFile) {
+      this.setScreen(screen.main)
+    }
   }
 
   state = {
     exampleStatus: true,
     activeScreen: screen.main,
-    traktorFile: config.get('traktor'),
-    rekorboxFile: config.get('rekordbox'),
+    isPreparing: true,
+    traktorFile: '',
+    rekordboxFile: '',
     readyToWork: false,
     workingStatus: true,
     workingMsg: '',
+    workingTrack: '',
     tracksToConvert: [],
     convertedTracks: [],
     playlistToConvert: [],
@@ -320,16 +418,21 @@ export class AppContextProvider extends React.Component {
     notConvertedTracks: [],
     notConvertedPlaylists: [],
     snackSuccess: false,
-    elapsedTimeSeconds: '',
+    elapsedTimeSeconds: 0,
     startDateTime: '',
+    validTraktorFile: true,
+    validRekordboxFile: true,
+    descriptionInvalidTraktorFile: false,
+    descriptionInvalidRekordboxFile: false,
 
     exampleToggleStatus: e => this.exampleToggleStatus(e),
     setScreen: screen => this.setScreen(screen),
     setTraktorFile: location => this.setTraktorFile(location),
-    setRekorboxFile: location => this.setRekorboxFile(location),
+    setRekordboxFile: location => this.setRekordboxFile(location),
     setReadyToWork: boolen => this.setReadyToWork(boolen),
     setWorkingStatus: boolen => this.setWorkingStatus(boolen),
     setWorkingMsg: string => this.setWorkingMsg(string),
+    setWorkingTrack: string => this.setWorkingTrack(string),
     addTrackToConvert: trackObject => this.addTrackToConvert(trackObject),
     addConvertedTracks: trackObject => this.addConvertedTracks(trackObject),
     addPlaylistToConvert: playlistObject =>
@@ -338,38 +441,25 @@ export class AppContextProvider extends React.Component {
       this.addConvertedPlaylist(playlistObject),
     addWorkSteps: () => this.addWorkSteps(),
     addWorkDoneSteps: () => this.addWorkDoneSteps(),
-    addNotConvertedTracks: trackObject =>
-      this.addNotConvertedTracks(trackObject),
-    addNotConvertedPlaylists: playlistObject =>
-      this.addNotConvertedPlaylists(playlistObject),
+    addNotConvertedTracks: (trackObject, reason) =>
+      this.addNotConvertedTracks(trackObject, reason),
+    addNotConvertedPlaylists: (playlistObject, reason) =>
+      this.addNotConvertedPlaylists(playlistObject, reason),
     goToMainScreen: () => this.goToMainScreen(),
     goToConfigScreen: () => this.setScreen(screen.config),
     goToWorkingScreen: () => this.setScreen(screen.working),
-    abortTheMagic: () => this.abortTheMagic(),
+    abortTheMagic: msgId => this.abortTheMagic(msgId),
     doTheMagic: () => this.doTheMagic()
   }
 
   render() {
+    console.log()
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}
-        <Snackbar
-          open={this.state.snackSuccess !== false}
-          autoHideDuration={6000}
-          onClose={() => this.setState({ snackSuccess: false })}
-        >
-          <MuiAlert
-            elevation={6}
-            severity="success"
-            variant="filled"
-            sx={{ width: '100%' }}
-          >
-            {this.state.snackSuccess}
-          </MuiAlert>
-        </Snackbar>
       </AppContext.Provider>
     )
   }
 }
-
-export default AppContext
+App.contextType = IntlContext
+export default injectIntl(App)

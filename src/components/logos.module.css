@@ -1,0 +1,17 @@
+.appIcon {
+  transition: 0.1s;
+  transform: scale(1);
+}
+
+.appIcon:hover {
+  box-shadow: 0px 0px 42px 0px #000000a8;
+  transform: scale(0.98);
+}
+.appIcon > div {
+  transition: 0.2s;
+  transform: rotate(0);
+}
+
+.appIcon:hover > div {
+  transform: rotate(15deg);
+}

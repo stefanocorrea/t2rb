@@ -1,0 +1,13 @@
+.rotateLoop {
+  animation: fill 1.3s linear infinite;
+}
+
+@keyframes fill {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

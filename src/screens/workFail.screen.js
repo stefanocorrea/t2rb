@@ -1,19 +1,28 @@
 import React from 'react'
-import { Drawer } from '@mui/material'
-import AppContext from '../context/app.context'
+import { Alert, Snackbar } from '@mui/material'
+import { AppContext } from '../context/app.context'
 import { screen } from '../config/screens'
+import { FormattedMessage } from 'react-intl'
 
 export class WorkFailScreen extends React.Component {
   render() {
     return (
       <AppContext.Consumer>
         {({ workingMsg, activeScreen, goToMainScreen }) => (
-          <Drawer anchor={'bottom'} open={activeScreen === screen.workFail}>
-            <div style={{ width: '100vw', height: '100vh' }}>
-              WORK FAIL <br />
-              <button onClick={() => goToMainScreen()}>Início</button>
-            </div>
-          </Drawer>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            open={activeScreen === screen.workFail}
+            onClose={this.handleClose}
+            autoHideDuration={2000}
+            sx={{ bottom: 30 }}
+          >
+            <Alert severity="error" variant={'outlined'}>
+              <FormattedMessage id={workingMsg} />
+            </Alert>
+          </Snackbar>
         )}
       </AppContext.Consumer>
     )

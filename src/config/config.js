@@ -31,6 +31,10 @@ const configSchema = {
   tempDir: {
     type: 'string',
     default: ''
+  },
+  lang: {
+    type: 'string',
+    default: 'en'
   }
 }
 

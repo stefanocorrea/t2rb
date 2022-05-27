@@ -1,0 +1,51 @@
+{
+  "language": {
+    "title": "Language definition",
+    "selected": "Active language"
+  },
+  "save": "Save",
+  "cancel": "Cancel",
+  "canceled": "Canceled",
+  "convert-library": "Do the Magic!",
+  "canceled-by-user": "Canceled by you",
+  "music": "Track",
+  "of": "of",
+  "remaining": "remaining",
+  "converted-entire-library-in": "The entire collection was converted in",
+  "process-completed": "Completed",
+  "not-converted": {
+    "tracks": {
+      "title": "tracks was not converted",
+      "reasons": {
+        "not-found": "File not found",
+        "corrupted": "File corrupted",
+        "playtime": "Track wihout playtime",
+        "analysis": "Can't be analized"
+      }
+    }
+  },
+  "by": "by",
+  "preparing-to-start": "Preparing to start...",
+  "invalid-traktor-file": "Invalid Traktor file",
+  "set": { "file": "Set file", "location": "Set location" },
+  "change": { "file": "Change file", "location": "Change location" },
+  "config": {
+    "title": "Configurations",
+    "fields": {
+      "rekordbox": {
+        "file": {
+          "label": "Rekordbox exported file",
+          "description": "Set a place to export the synced collection",
+          "invalid-file": "Invalid. Please set a file with \".xml\" extention"
+        }
+      },
+      "traktor": {
+        "file": {
+          "label": "Traktor file",
+          "description": "Select the Traktor`s collection file",
+          "invalid-file": "Invalid. Please select a Traktor's collection file with extention \".nml\""
+        }
+      }
+    }
+  }
+}
