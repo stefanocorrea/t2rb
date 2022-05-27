@@ -57,7 +57,7 @@
     },
     "extraResources": [
       {
-        "from": "extra_resources_build/",
+        "from": "extra_resources/",
         "to": "extra_resources",
         "filter": [
           "**/*"
