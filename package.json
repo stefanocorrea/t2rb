@@ -1,5 +1,5 @@
 {
-  "name": "Traktbox",
+  "name": "traktbox",
   "description": "Collection converter from Traktor to Rekordbox",
   "author": "Deep Stefano",
   "version": "1.0.0",
@@ -48,31 +48,22 @@
         {
           "target": "portable"
         }
-      ],
-      "extraResources": [
-        {
-          "from": "extra_resources_build/win/",
-          "to": "extra_resources",
-          "filter": [
-            "**/*"
-          ]
-        }
       ]
     },
     "mac": {
       "icon": "./public/icon/icns/512.icns",
       "category": "public.app-category.music",
-      "target": "dmg",
-      "extraResources": [
-        {
-          "from": "extra_resources_build/mac/",
-          "to": "extra_resources",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
+      "target": "dmg"
     },
+    "extraResources": [
+      {
+        "from": "extra_resources_build/",
+        "to": "extra_resources",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "dist/**/*",
       "build/**/*",

@@ -259,7 +259,7 @@ export class Library {
 
   getTrackByLocation(fileLocation) {
     let trackFound = this.collection.reduce((acum, track) => {
-      return !acum && track.location === decodeString(fileLocation)
+      return !acum && decodeString(fileLocation).includes(track.location)
         ? track
         : acum
     }, false)
