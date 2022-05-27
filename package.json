@@ -1,6 +1,8 @@
 {
-  "name": "t2rb",
-  "version": "0.1.0",
+  "name": "Traktbox",
+  "description": "Collection converter from Traktor to Rekordbox",
+  "author": "Deep Stefano",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@electron/remote": "^1.0.2",
@@ -28,18 +30,27 @@
   "main": "public/main.js",
   "homepage": "./",
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start ",
-    "build": "react-scripts  --openssl-legacy-provider build",
+    "start": "react-scripts start ",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron:serve": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn electron:start\"",
     "electron:build": "yarn build && electron-builder -c.extraMetadata.main=build/main.js",
-    "electron:start": "wait-on http://0.0.0.0:3000 && electron .",
+    "electron:start": "wait-on tcp:3000 && electron .",
     "ttt": ".\\node_modules\\electron\\dist\\electron.exe ."
   },
   "build": {
     "extends": null,
     "appId": "com.example.electron-cra",
+    "win": {
+      "icon": "./public/icon/png/512.png",
+      "target": "portable"
+    },
+    "mac": {
+      "icon": "./public/icon/icns/512.icns",
+      "category": "public.app-category.music",
+      "target": "dmg"
+    },
     "files": [
       "dist/**/*",
       "build/**/*",
