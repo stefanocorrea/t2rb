@@ -81,7 +81,7 @@ export class App extends React.Component {
   }
 
   setTraktorFile = async location => {
-    if (!location) return
+    if (!location) return this.validateTraktorFile()
 
     let newLocationName = location.toString().replace(/\\/g, '/')
 
@@ -94,7 +94,7 @@ export class App extends React.Component {
   }
 
   setRekordboxFile = async location => {
-    if (!location) return
+    if (!location) return this.validateRekordboxFile()
     let newLocationName = location.replace(/\\/g, '/')
 
     config.set('rekordbox', newLocationName)

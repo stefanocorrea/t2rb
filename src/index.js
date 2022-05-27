@@ -11,18 +11,29 @@ import WorkFailScreen from './screens/workFail.screen'
 import LanguageScreen from './screens/language.screen'
 import LanguageIconSelect from './components/LanguageIconSelect'
 import { Box } from '@mui/material'
+import { IntlContext } from './context/intl.context'
 
 ReactDOM.render(
   <React.StrictMode>
     <Intl>
       <App>
         <Theme>
-          <MainScreen />
-          <ConfigScreen />
-          <WorkCompleteScreen />
-          <WorkCanceledScreen />
-          <WorkFailScreen />
-          <LanguageScreen />
+          <IntlContext.Consumer>
+            {({ needSetLang }) => (
+              <>
+                {!needSetLang && (
+                  <>
+                    <MainScreen />
+                    <ConfigScreen />
+                    <WorkCompleteScreen />
+                    <WorkCanceledScreen />
+                    <WorkFailScreen />
+                  </>
+                )}
+                <LanguageScreen />
+              </>
+            )}
+          </IntlContext.Consumer>
         </Theme>
       </App>
     </Intl>

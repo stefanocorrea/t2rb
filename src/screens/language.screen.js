@@ -34,13 +34,20 @@ export class LanguageScreen extends React.Component {
   render() {
     return (
       <IntlContext.Consumer>
-        {({ language, setLang, saveLang, modalOpen, toggleModalOpen }) => (
+        {({
+          language,
+          setLang,
+          saveLang,
+          modalOpen,
+          setModalClose,
+          needSetLang
+        }) => (
           <>
             <Dialog
               disableEscapeKeyDown
-              open={modalOpen}
+              open={modalOpen || needSetLang}
               onClose={async () => {
-                await toggleModalOpen()
+                !needSetLang && (await setModalClose())
                 setLang(config.get('lang'))
               }}
             >
@@ -95,21 +102,23 @@ export class LanguageScreen extends React.Component {
                 </Box>
               </DialogContent>
               <DialogActions>
+                {!needSetLang && (
+                  <Button
+                    onClick={async () => {
+                      await setModalClose()
+                      setLang(config.get('lang'))
+                    }}
+                  >
+                    <FormattedMessage id="cancel" />
+                  </Button>
+                )}
                 <Button
                   onClick={async () => {
-                    await toggleModalOpen()
+                    await setModalClose()
                     saveLang(language)
                   }}
                 >
                   <FormattedMessage id="save" />
-                </Button>
-                <Button
-                  onClick={async () => {
-                    await toggleModalOpen()
-                    setLang(config.get('lang'))
-                  }}
-                >
-                  <FormattedMessage id="cancel" />
                 </Button>
               </DialogActions>
             </Dialog>

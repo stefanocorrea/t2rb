@@ -30,7 +30,7 @@
   "set": { "file": "Set file", "location": "Set location" },
   "change": { "file": "Change file", "location": "Change location" },
   "config": {
-    "title": "Configurations",
+    "title": "Required configurations",
     "fields": {
       "rekordbox": {
         "file": {

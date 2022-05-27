@@ -42,10 +42,17 @@ export class Intl extends React.Component {
   state = {
     language: config.get('lang'),
     modalOpen: false,
+    needSetLang: config.get('needSetLanguage'),
 
     setLang: newLang => this.setLang(newLang),
-    saveLang: newLang => config.set('lang', newLang),
-    toggleModalOpen: () => this.setState({ modalOpen: !this.state.modalOpen })
+    saveLang: newLang => {
+      config.set('lang', newLang)
+      config.set('needSetLanguage', false)
+      this.setState({ needSetLang: false, language: newLang })
+    },
+    toggleModalOpen: () =>
+      this.setState({ modalOpen: !this.state.modalOpen, needSetLang: false }),
+    setModalClose: () => this.setState({ modalOpen: false, needSetLang: false })
   }
 
   render() {

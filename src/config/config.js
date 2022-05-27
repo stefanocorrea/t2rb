@@ -34,7 +34,11 @@ const configSchema = {
   },
   lang: {
     type: 'string',
-    default: 'en'
+    default: ''
+  },
+  lang: {
+    type: 'bolean',
+    default: 'true'
   }
 }
 
@@ -47,6 +51,11 @@ configObject.set(
     'dj-data-converter'
   )
 )
+
+if (!configObject.get('lang')) {
+  configObject.set('lang', 'en')
+  configObject.set('needSetLanguage', true)
+}
 
 configObject.set(
   'tempDir',

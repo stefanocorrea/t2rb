@@ -31,7 +31,11 @@ export class ConfigScreen extends React.Component {
         }) => (
           <>
             <SecondaryScreen
-              open={activeScreen === screen.config}
+              open={
+                activeScreen === screen.config ||
+                !validTraktorFile ||
+                !validRekordboxFile
+              }
               title={<FormattedMessage id="config.title" />}
               // description={<FormattedMessage id="config.description" />}
               dontShowClose={!validTraktorFile || !validRekordboxFile}
@@ -83,7 +87,7 @@ export class ConfigScreen extends React.Component {
                   value={rekordboxFile}
                   buttonText={
                     <FormattedMessage
-                      id={traktorFile ? 'change.location' : 'set.location'}
+                      id={rekordboxFile ? 'change.location' : 'set.location'}
                     />
                   }
                   description={
