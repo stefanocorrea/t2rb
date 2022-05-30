@@ -8,6 +8,8 @@ import { decodeString } from '../helpers/decodeString'
 
 import moment from 'moment'
 
+var os = window.require('os')
+
 export function createTrackFromTraktorXML(xmlString, trackId = false) {
   let trackNode = new XMLParser().parseFromString(xmlString)
 
@@ -21,11 +23,14 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   let loudnessNode = trackNode.getElementsByTagName('LOUDNESS')[0]?.attributes
   let keyNode = trackNode.getElementsByTagName('MUSICAL_KEY')[0]?.attributes
 
+  let isMacOS = os.platform() === 'darwin'
+
   let track = new Track(
     decodeString(
-      `${
-        locationNode.VOLUME !== locationNode.VOLUMEID ? locationNode.VOLUME : ''
-      }${locationNode.DIR.replaceAll('/:', '/')}${locationNode.FILE}`
+      `${isMacOS ? '/Volumes/' : ''}${locationNode.VOLUME.replaceAll(
+        '/:',
+        '/'
+      )}${locationNode.DIR.replaceAll('/:', '/')}${locationNode.FILE}`
     )
   )
 
