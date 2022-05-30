@@ -83,7 +83,9 @@ export class WorkCompleteScreen extends React.Component {
                       dense
                       sx={{
                         width: '100%',
-                        maxWidth: '90vw'
+                        maxWidth: '90vw',
+                        maxHeight: 'calc(100vh - 140px)',
+                        overflow: 'auto'
                       }}
                     >
                       {notConvertedTracks.map((track, index) => {
