@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<NML VERSION="19">
+	<HEAD COMPANY="www.native-instruments.com" PROGRAM="Traktor">
+	</HEAD>
+	<MUSICFOLDERS>
+	</MUSICFOLDERS>
+	<COLLECTION ENTRIES="1">
+	</COLLECTION>
+	<SETS ENTRIES="0">
+	</SETS>
+	<PLAYLISTS>
+		<NODE TYPE="FOLDER" NAME="$ROOT">
+		</NODE>
+	</PLAYLISTS>
+</NML>
