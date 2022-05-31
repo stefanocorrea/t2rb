@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="rekordbox" Version="6.6.3" Company="AlphaTheta"/>
+  <COLLECTION Entries="5">
+    <TRACK TrackID="125689582" Name="Vem Pra Cima" Artist="Meno Tody" Composer=""
+           Album="Vem Pra Cima" Grouping="" Genre="Rap/Hip Hop" Kind="MP3 File"
+           Size="8416" TotalTime="213" DiscNumber="0" TrackNumber="1" Year="2021"
+           AverageBpm="80.99" DateAdded="2021-09-03" BitRate="320" SampleRate="44100"
+           Comments="undefined / undefined" PlayCount="3" Rating="0" Location="file://localhost/D:/DJ/Deemix%20Downloads/Meno%20Tody%20-%20Vem%20Pra%20Cima.mp3"
+           Remixer="" Tonality="Fm" Label="Tody" Mix="">
+      <TEMPO Inizio="0.086" Bpm="81.00" Metro="4/4" Battito="1"/>
+      <POSITION_MARK Name="grid perfeito" Type="0" Start="0.086" Num="0" Red="255"
+                     Green="255" Blue="255"/>
+      <POSITION_MARK Name="grave" Type="0" Start="23.790" Num="1" Red="40" Green="226"
+                     Blue="20"/>
+      <POSITION_MARK Name="[djdc] grid perfeito" Type="0" Start="0.086" Num="-1"/>
+      <POSITION_MARK Name="[djdc] grave" Type="0" Start="23.790" Num="-1"/>
+    </TRACK>
+    <TRACK TrackID="146514372" Name="The Next Episode (House Vollaz Bootleg)"
+           Artist="Dr. Dre &amp; Snoop Dogg" Composer="" Album="" Grouping=""
+           Genre="eMusic" Kind="MP3 File" Size="13310" TotalTime="337" DiscNumber="0"
+           TrackNumber="0" Year="2022" AverageBpm="123.98" DateAdded="2018-02-05"
+           BitRate="320" SampleRate="44100" Comments="div / bbb" PlayCount="6"
+           Rating="204" Location="file://localhost/D:/dj/Tracks/Dr.%20Dre%20%26%20Snoop%20Dogg%20-%20The%20Next%20Episode%20(Vollaz%20Bootleg).mp3"
+           Remixer="" Tonality="Ebm" Label="" Mix="">
+      <TEMPO Inizio="0.056" Bpm="123.98" Metro="4/4" Battito="1"/>
+      <POSITION_MARK Name="AutoGrid" Type="0" Start="0.056" Num="0" Red="255" Green="255"
+                     Blue="255"/>
+      <POSITION_MARK Name="n.n." Type="0" Start="46.514" Num="1" Red="40" Green="226"
+                     Blue="20"/>
+      <POSITION_MARK Name="[djdc] AutoGrid" Type="0" Start="0.056" Num="-1"/>
+      <POSITION_MARK Name="[djdc] n.n." Type="0" Start="46.514" Num="-1"/>
+    </TRACK>
+    <TRACK TrackID="248432024" Name="Informer (D&apos;Maduro Rudeboy Remix)"
+           Artist="Snow" Composer="" Album="" Grouping="" Genre="Pop" Kind="MP3 File"
+           Size="8033" TotalTime="205" DiscNumber="0" TrackNumber="0" Year="2022"
+           AverageBpm="103.00" DateAdded="2018-04-20" BitRate="320" SampleRate="48000"
+           Comments="undefined / bbb" PlayCount="3" Rating="153" Location="file://localhost/D:/dj/Tracks/Snow%20-%20Informer%20(D%27Maduro%20Rudeboy%20Remix).mp3"
+           Remixer="" Tonality="Abm" Label="" Mix="">
+      <TEMPO Inizio="0.111" Bpm="103.00" Metro="4/4" Battito="1"/>
+      <POSITION_MARK Name="AutoGrid" Type="0" Start="0.111" Num="0" Red="255" Green="255"
+                     Blue="255"/>
+      <POSITION_MARK Name="n.n." Type="4" Start="9.431" End="18.751" Num="3" Red="255"
+                     Green="140" Blue="0"/>
+      <POSITION_MARK Name="n.n." Type="4" Start="191.179" End="195.839" Num="4" Red="255"
+                     Green="140" Blue="0"/>
+      <POSITION_MARK Name="[djdc] AutoGrid" Type="0" Start="0.111" Num="-1"/>
+      <POSITION_MARK Name="[djdc] n.n." Type="4" Start="9.431" End="18.751" Num="-1"/>
+      <POSITION_MARK Name="[djdc] n.n." Type="4" Start="191.179" End="195.839" Num="-1"/>
+    </TRACK>
+    <TRACK TrackID="116629910" Name="Somebody That I Used to Know (Duotronic and Vitale &amp; Fernandez Remix)"
+           Artist="Gotye" Composer="" Album="" Grouping="" Genre="eMusic"
+           Kind="MP3 File" Size="13701" TotalTime="350" DiscNumber="0" TrackNumber="0"
+           Year="2022" AverageBpm="120.50" DateAdded="2020-10-30" BitRate="320"
+           SampleRate="48000" Comments="Sax / undefined" PlayCount="1" Rating="51"
+           Location="file://localhost/D:/dj/Tracks/Gotye%20-%20Somebody%20That%20I%20Used%20to%20Know%20(Duotronic%20and%20Vitale%20%26%20Fernandez%20Remix).mp3"
+           Remixer="" Tonality="Dm" Label="" Mix="">
+      <TEMPO Inizio="0.192" Bpm="120.50" Metro="4/4" Battito="1"/>
+      <POSITION_MARK Name="AutoGrid" Type="0" Start="0.192" Num="0" Red="255" Green="255"
+                     Blue="255"/>
+      <POSITION_MARK Name="[djdc] AutoGrid" Type="0" Start="0.192" Num="-1"/>
+    </TRACK>
+    <TRACK TrackID="57708246" Name="M - 12 Mola baile do moca - Hoje pode - Estica e toma (DEEP STEFANO EDIT)"
+           Artist="Deep Stefano" Composer="" Album="MEGUINHA" Grouping=""
+           Genre="" Kind="MP3 File" Size="7413" TotalTime="189" DiscNumber="0"
+           TrackNumber="0" Year="2022" AverageBpm="123.99" DateAdded="2022-01-14"
+           BitRate="320" SampleRate="44100" Comments="undefined / undefined"
+           PlayCount="2" Rating="0" Location="file://localhost/D:/DJ/MEGUINHA/Sem%20vinhetas/MEGUINHA%20-%2012%20Mola%20baile%20do%20moca%20-%20Hoje%20pode%20-%20Estica%20e%20toma%20(DEEP%20STEFANO%20EDIT).mp3"
+           Remixer="" Tonality="Dbm" Label="" Mix="">
+      <TEMPO Inizio="0.040" Bpm="123.99" Metro="4/4" Battito="1"/>
+      <POSITION_MARK Name="AutoGrid" Type="0" Start="0.040" Num="0" Red="255" Green="255"
+                     Blue="255"/>
+      <POSITION_MARK Name="[djdc] AutoGrid" Type="0" Start="0.040" Num="-1"/>
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Type="0" Name="ROOT" Count="2">
+      <NODE Name="folder1" Type="0" Count="2">
+        <NODE Name="subfolder1" Type="0" Count="0"/>
+        <NODE Name="subplaylist1" Type="1" KeyType="0" Entries="0"/>
+      </NODE>
+      <NODE Name="playlist1" Type="1" KeyType="0" Entries="0"/>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

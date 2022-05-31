@@ -453,7 +453,6 @@ export class App extends React.Component {
   }
 
   render() {
-    console.log()
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}

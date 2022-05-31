@@ -206,12 +206,12 @@ export class Track {
       (this.gridStart && this.bpm
         ? `<TEMPO Inizio="${this.gridStart}" Bpm="${this.bpm}" Metro="4/4" Battito="1" />`
         : '') +
-      (this.hotCues.length > 0
+      (this.hotCues?.length > 0
         ? this.hotCues.reduce((acum, curr) => {
             return acum + curr.exportAsRekordbox()
           }, '')
         : '') +
-      (this.memoryCues.length > 0
+      (this.memoryCues?.length > 0
         ? this.memoryCues.reduce((acum, curr) => {
             return acum + curr.exportAsRekordbox()
           }, '')

@@ -1,4 +1,6 @@
-import XMLParser from 'react-xml-parser'
+import XMLParseAntigo from 'react-xml-parser'
+import { getParseOptions } from '../helpers/parseXmlDefaultOptions'
+import { XMLParser, XMLBuilder } from 'fast-xml-parser'
 import { Folder } from './Folder.class'
 import { Playlist } from './Playlist.class'
 import { Track } from './Track.class'
@@ -10,8 +12,10 @@ import { createTrackFromRekordboxXML } from '../helpers/createTrackFromXML'
 import { convertRGBToHex } from '../helpers/convertRGBToHex'
 import moment from 'moment'
 import { decodeString } from '../helpers/decodeString'
+import { attr } from '../helpers/createXmlAttrString.js'
 
 const fs = window.require('fs').promises
+const os = window.require('os')
 
 export class Library {
   originalLibrary
@@ -25,11 +29,11 @@ export class Library {
   recursiveReadTraktorPlaylistNode(node) {
     /* TODO: organize names */
     let a
-    switch (node.attributes.TYPE) {
+    switch (node._TYPE) {
       case 'FOLDER':
-        a = new Folder(node.attributes.NAME)
-        node.children[0].children.map(subnode => {
-          switch (subnode.attributes.TYPE) {
+        a = new Folder(node._NAME)
+        node.SUBNODES?.NODE?.map(subnode => {
+          switch (subnode._TYPE) {
             case 'FOLDER':
               a.addFolder(this.recursiveReadTraktorPlaylistNode(subnode))
               break
@@ -42,15 +46,16 @@ export class Library {
         })
         break
       case 'PLAYLIST':
-        a = new Playlist(node.attributes.NAME)
-        node.children[0].children.map(subnode => {
-          let location = subnode.children[0].attributes.KEY.replaceAll(
-            '/:',
-            '/'
+        a = new Playlist(node._NAME)
+        node.PLAYLIST?.ENTRY?.map(subnode => {
+          let isMacOS = os.platform() === 'darwin'
+
+          let location = decodeString(
+            `${isMacOS ? '/Volumes/' : ''}${
+              subnode.PRIMARYKEY._KEY
+            }`.replaceAll('/:', '/')
           )
           let track = new Track(location)
-
-          //      console.log(location)
           let trackInLibrary = this.getTrackByLocation(location)
           trackInLibrary && track.setId(trackInLibrary.id)
 
@@ -66,33 +71,32 @@ export class Library {
   }
 
   importPlaylistsFromTraktor() {
-    let originalPlaylists = this.originalLibrary.getElementsByTagName(
-      'PLAYLISTS'
-    )
+    let originalPlaylists = this.originalLibrary.NML?.PLAYLISTS
 
     let a = []
-    originalPlaylists.length > 0 &&
-      originalPlaylists[0].children?.map(node =>
-        a.push(this.recursiveReadTraktorPlaylistNode(node))
-      )
+    originalPlaylists &&
+      a.push(this.recursiveReadTraktorPlaylistNode(originalPlaylists?.NODE))
 
     this.playlists = a
 
-    return true
+    // return true
   }
 
   importCollectionFromTraktor() {
-    this.originalLibrary
-      .getElementsByTagName('COLLECTION')[0]
-      .getElementsByTagName('ENTRY')
-      .map((trackNode, index) => {
-        let xmlString = new XMLParser().toString(trackNode)
-        let track = createTrackFromTraktorXML(xmlString, index + 1)
+    let libraryTracks = []
 
-        return this.collection.push(track)
-      })
+    this.originalLibrary.NML.COLLECTION?.ENTRY.map((trackNode, index) => {
+      const builder = new XMLBuilder(getParseOptions('traktor'))
+      let xmlDataStr = builder.build([trackNode])
 
-    //    console.log(a)
+      let track = createTrackFromTraktorXML(xmlDataStr, index + 1)
+
+      libraryTracks.push(track)
+
+      return true
+    })
+
+    this.collection = libraryTracks
   }
 
   importPlaylistsFromRekordbox() {
@@ -100,21 +104,24 @@ export class Library {
   }
 
   importCollectionFromRekordbox() {
-    this.originalLibrary
-      .getElementsByTagName('COLLECTION')[0]
-      .getElementsByTagName('TRACK')
-      .map((trackNode, index) => {
-        let xmlString = new XMLParser().toString(trackNode)
-        let track = createTrackFromRekordboxXML(xmlString, index + 1)
+    this.originalLibrary.DJ_PLAYLISTS?.COLLECTION?.TRACK.map(
+      (trackNode, index) => {
+        const builder = new XMLBuilder(getParseOptions('rekordbox'))
+        let xmlDataStr = builder.build([trackNode])
+
+        let track = createTrackFromRekordboxXML(xmlDataStr, index + 1)
 
         return this.collection.push(track)
-      })
+      }
+    )
   }
 
-  guessOrigin() {
-    if (this.originalLibrary.name === 'NML') return (this.origin = 'traktor')
-    if (this.originalLibrary.name === 'DJ_PLAYLISTS')
-      return (this.origin = 'rekordbox')
+  guessOrigin(xmlLibraryString) {
+    let xml = new XMLParser()
+    let xmlAsObject = xml.parse(xmlLibraryString)
+
+    if (xmlAsObject.NML) return (this.origin = 'traktor')
+    if (xmlAsObject.DJ_PLAYLISTS) return (this.origin = 'rekordbox')
   }
 
   setOrigin(value) {
@@ -124,7 +131,6 @@ export class Library {
   setOriginalLibrary(value) {
     if (!value) return false
     this.originalLibrary = value
-    this.setOrigin(this.guessOrigin())
 
     return true
   }
@@ -141,6 +147,7 @@ export class Library {
 
   exportCollectionAsTraktor() {
     if (this.collection.length < 1) return ''
+    alert()
 
     return (
       `<COLLECTION ENTRIES="${this.collection.length}">` +
@@ -221,12 +228,13 @@ export class Library {
   }
 
   importLibrary(xmlLibraryString) {
-    const regex = /AUDIO_ID=\"[^\"]*"/gm
-    let xml = new XMLParser().parseFromString(
-      xmlLibraryString.replace(regex, ``)
-    )
+    let program = this.guessOrigin(xmlLibraryString)
+    this.setOrigin(program)
 
-    this.setOriginalLibrary(xml)
+    let xml = new XMLParser(getParseOptions(program))
+    let xmlAsObject = xml.parse(xmlLibraryString)
+
+    this.setOriginalLibrary(xmlAsObject)
 
     this.importCollection()
     this.importPlaylists()
@@ -259,9 +267,7 @@ export class Library {
 
   getTrackByLocation(fileLocation) {
     let trackFound = this.collection.reduce((acum, track) => {
-      return !acum && decodeString(fileLocation).includes(track.location)
-        ? track
-        : acum
+      return !acum && fileLocation === track.location ? track : acum
     }, false)
     return trackFound
   }

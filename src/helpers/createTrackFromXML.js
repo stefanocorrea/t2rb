@@ -1,49 +1,43 @@
-import XMLParser from 'react-xml-parser'
+import XMLParseAntigo from 'react-xml-parser'
 import { Track } from '../class/Track.class'
 import { HotCue } from '../class/HotCue.class'
 import { MemoryCue } from '../class/MemoryCue.class'
-import { convertRGBToHex } from '../helpers/convertRGBToHex'
-import { getOpenKey } from '../helpers/getOpenKey'
-import { decodeString } from '../helpers/decodeString'
+import { convertRGBToHex } from './convertRGBToHex'
+import { getOpenKey } from './getOpenKey'
+import { decodeString } from './decodeString'
+import { XMLParser, XMLBuilder } from 'fast-xml-parser'
+import { getParseOptions } from './parseXmlDefaultOptions'
 
 import moment from 'moment'
 
 var os = window.require('os')
 
 export function createTrackFromTraktorXML(xmlString, trackId = false) {
-  let trackNode = new XMLParser().parseFromString(xmlString)
-
-  let node = trackNode.attributes
-
-  let locationNode = trackNode.getElementsByTagName('LOCATION')[0].attributes
-  let infoNode = trackNode.getElementsByTagName('INFO')[0]?.attributes
-  let albumNode = trackNode.getElementsByTagName('ALBUM')[0]?.attributes
-  let tempoNode = trackNode.getElementsByTagName('TEMPO')[0]?.attributes
-  let cueNodes = trackNode.getElementsByTagName('CUE_V2')
-  let loudnessNode = trackNode.getElementsByTagName('LOUDNESS')[0]?.attributes
-  let keyNode = trackNode.getElementsByTagName('MUSICAL_KEY')[0]?.attributes
+  const regex = /AUDIO_ID=\"[^\"]*"/gm
+  let xml = new XMLParser(getParseOptions('traktor')).parse(
+    xmlString.replace(regex, ``)
+  )
 
   let isMacOS = os.platform() === 'darwin'
 
   let track = new Track(
     decodeString(
-      `${isMacOS ? '/Volumes/' : ''}${locationNode.VOLUME.replaceAll(
-        '/:',
-        '/'
-      )}${locationNode.DIR.replaceAll('/:', '/')}${locationNode.FILE}`
+      `${isMacOS ? '/Volumes/' : ''}${xml.ENTRY.LOCATION._VOLUME}${
+        xml.ENTRY.LOCATION._DIR
+      }${xml.ENTRY.LOCATION._FILE}`.replaceAll('/:', '/')
     )
   )
 
   track.setOriginalXml(xmlString)
 
-  track.setTitle(decodeString(node.TITLE))
-  track.setArtist(decodeString(node.ARTIST))
-  track.setAlbum(decodeString(albumNode?.TITLE))
-  track.setBpm(parseFloat(tempoNode?.BPM))
-  track.setBitRate(parseInt(infoNode?.BITRATE))
+  track.setTitle(decodeString(xml.ENTRY._TITLE))
+  track.setArtist(decodeString(xml.ENTRY._ARTIST))
+  track.setAlbum(decodeString(xml.ENTRY.ALBUM?._TITLE))
+  track.setBpm(parseFloat(xml.ENTRY.TEMPO?._BPM))
+  track.setBitRate(parseInt(xml.ENTRY.INFO?._BITRATE))
 
   let colorName
-  switch (infoNode?.COLOR) {
+  switch (parseInt(xml.ENTRY.INFO?._COLOR)) {
     case 0:
       colorName = '#FF0000' //red
       break
@@ -72,42 +66,43 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   track.setColor(colorName)
   track.setComments(
     decodeString(
-      `${infoNode?.COMMENT || ''}${
-        infoNode?.RATING ? '/' + infoNode?.RATING : ''
+      `${xml.ENTRY.INFO?._COMMENT || ''}${
+        xml.ENTRY.INFO?._RATING ? '/' + xml.ENTRY.INFO?._RATING : ''
       }`
     )
   )
-  track.setProducer(decodeString(infoNode?.PRODUCER))
+  track.setProducer(decodeString(xml.ENTRY.INFO?._PRODUCER))
 
-  infoNode?.IMPORT_DATE &&
+  xml.ENTRY.INFO?._IMPORT_DATE &&
     track.setImportDateTime(
       new Date(
-        `${infoNode.IMPORT_DATE.replaceAll('/', '-')} 00:00:00`
+        `${xml.ENTRY.INFO?._IMPORT_DATE.replaceAll('/', '-')} 00:00:00`
       ).toISOString()
     )
 
-  track.setGenre(decodeString(infoNode?.GENRE))
+  track.setGenre(decodeString(xml.ENTRY.INFO?._GENRE))
 
-  track.setType(/(?:\.([^.]+))?$/.exec(locationNode?.FILE)[1].toLowerCase())
+  track.setType(
+    /(?:\.([^.]+))?$/.exec(xml.ENTRY.LOCATION._FILE)[1].toLowerCase()
+  )
 
-  track.setLabel(decodeString(infoNode?.LABEL))
-  // track.setCatalog(node.DiscNumber)
+  track.setLabel(decodeString(xml.ENTRY.INFO?._LABEL))
 
-  track.setMix(decodeString(infoNode?.MIX))
-  track.setPlayCount(infoNode?.PLAYCOUNT)
-  track.setRating(parseInt(infoNode?.RANKING))
-  track.setRemixer(decodeString(infoNode?.REMIXER))
-  //      track.setSampleRate(node.SampleRate * 1000)
-  /** */
-  track.setPeakDb(parseFloat(loudnessNode?.PEAK_DB))
-  track.setPerceivedDb(parseFloat(loudnessNode?.PERCEIVED_DB))
-  track.setAnalyzedDb(parseFloat(loudnessNode?.ANALYZED_DB))
-  /** */
+  track.setMix(decodeString(xml.ENTRY.INFO?._MIX))
+  track.setPlayCount(xml.ENTRY.INFO?._PLAYCOUNT)
+  track.setRating(parseInt(xml.ENTRY.INFO?._RANKING))
+  track.setRemixer(decodeString(xml.ENTRY.INFO?._REMIXER))
 
-  track.setSize(infoNode?.FILESIZE)
+  // /** */
+  track.setPeakDb(parseFloat(xml.ENTRY.LOUDNESS?._PEAK_DB))
+  track.setPerceivedDb(parseFloat(xml.ENTRY.LOUDNESS?._PERCEIVED_DB))
+  track.setAnalyzedDb(parseFloat(xml.ENTRY.LOUDNESS?._ANALYZED_DB))
+  // /** */
+
+  track.setSize(xml.ENTRY.INFO?._FILESIZE)
 
   let openKey
-  switch (parseInt(keyNode?.VALUE)) {
+  switch (parseInt(xml.ENTRY.MUSICAL_KEY?._VALUE)) {
     case 0:
       openKey = '1d'
       break
@@ -187,35 +182,35 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
   track.setKey(openKey)
 
   track.setDuration(
-    infoNode?.PLAYTIME_FLOAT ? parseFloat(infoNode?.PLAYTIME_FLOAT) * 1000 : 1
+    xml.ENTRY.INFO?._PLAYTIME_FLOAT
+      ? parseFloat(xml.ENTRY.INFO?._PLAYTIME_FLOAT) * 1000
+      : 1
   )
 
-  track.setId(trackId ? trackId : node?.AUDIO_ID)
-  track.setTrackNumber(parseInt(albumNode?.TRACK))
-  infoNode?.RELEASE_DATE &&
-    track.setReleaseDate(moment(infoNode?.RELEASE_DATE).format('YYYY-MM-DD'))
+  track.setId(trackId ? trackId : xml.ENTRY._AUDIO_ID)
+  track.setTrackNumber(parseInt(xml.ENTRY.ALBUM?._TRACK))
+  xml.ENTRY.INFO?._RELEASE_DATE &&
+    track.setReleaseDate(
+      moment(xml.ENTRY.INFO?._RELEASE_DATE).format('YYYY-MM-DD')
+    )
 
-  node?.MODIFIED_DATE &&
-    node?.MODIFIED_TIME &&
+  xml.ENTRY._MODIFIED_DATE &&
+    xml.ENTRY._MODIFIED_TIME &&
     track.setModifiedDateTime(
       `${moment(
-        `${node.MODIFIED_DATE} ${new Date(node.MODIFIED_TIME * 1000)
+        `${xml.ENTRY._MODIFIED_DATE} ${new Date(xml.ENTRY._MODIFIED_TIME * 1000)
           .toISOString()
           .substr(11, 8)}`
       ).toISOString()}`
     )
 
   track.setHotCues(
-    cueNodes.reduce((acum, cue) => {
-      let cueAttr = cue.attributes
-      let hotcue = new HotCue(
-        parseInt(cueAttr?.HOTCUE),
-        parseFloat(cueAttr?.START)
-      )
-      hotcue.setEnd(parseFloat(cueAttr?.START) + parseFloat(cueAttr?.LEN))
-      hotcue.setType(parseInt(cueAttr?.TYPE))
+    xml.ENTRY.CUE_V2?.reduce((acum, cue) => {
+      let hotcue = new HotCue(parseInt(cue._HOTCUE), parseFloat(cue._START))
+      hotcue.setEnd(parseFloat(cue._START) + parseFloat(cue._LEN))
+      hotcue.setType(parseInt(cue._TYPE))
       let cueColor
-      switch (parseInt(cueAttr?.TYPE)) {
+      switch (parseInt(cue._TYPE)) {
         case 0:
           cueColor = '#0000FF' // cue
           break
@@ -229,7 +224,7 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
           cueColor = '#FFFF00' // load
           break
         case 4:
-          track.setGridStart(parseFloat(cueAttr?.START))
+          track.setGridStart(parseFloat(cue._START))
           cueColor = '#FFFFFF' // grid
           break
         case 5:
@@ -239,17 +234,16 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
           cueColor = false
       }
       hotcue.setColor(cueColor)
-      hotcue.setLabel(decodeString(cueAttr?.NAME))
+      hotcue.setLabel(decodeString(cue._NAME))
       return [...acum, hotcue]
     }, [])
   )
 
   track.setMemoryCues(
-    cueNodes.reduce((acum, cue) => {
-      let cueAttr = cue.attributes
-      let hotcue = new MemoryCue(parseFloat(cueAttr?.START))
-      hotcue.setEnd(parseFloat(cueAttr?.START) + parseFloat(cueAttr?.LEN))
-      hotcue.setLabel(decodeString(cueAttr?.NAME))
+    xml.ENTRY.CUE_V2?.reduce((acum, cue) => {
+      let hotcue = new MemoryCue(parseFloat(cue._START))
+      hotcue.setEnd(parseFloat(cue._START) + parseFloat(cue._LEN))
+      hotcue.setLabel(decodeString(cue._NAME))
       return [...acum, hotcue]
     }, [])
   )
@@ -260,83 +254,85 @@ export function createTrackFromTraktorXML(xmlString, trackId = false) {
 export async function createTrackFromRekordboxXML(xmlString, trackId = false) {
   if (!xmlString) return false
 
-  let trackNode = new XMLParser().parseFromString(xmlString)
+  let xml = new XMLParser(getParseOptions('rekordbox')).parse(xmlString)
 
-  let node = trackNode?.attributes
+  //let trackNode = new XMLParseAntigo().parseFromString(xmlString)
+
+  // let node = trackNode?.attributes
   let track = new Track(
-    decodeURIComponent(node.Location?.replace('file://localhost/', ''))
+    decodeURIComponent(xml.TRACK?._Location.replace('file://localhost/', ''))
   )
 
-  track.setOriginalXml(xmlString)
+  // track.setOriginalXml(xmlString)
 
-  track.setTitle(decodeString(node?.Name))
-  track.setArtist(decodeString(node?.Artist))
-  track.setAlbum(decodeString(node?.Album))
-  track.setBpm(parseFloat(node?.AverageBpm))
-  track.setBitRate(parseInt(node?.BitRate * 1000))
-  track.setColor(node?.Colour?.replaceAll('0x', '#'))
-  track.setComments(decodeString(node?.Comments))
-  track.setProducer(decodeString(node?.Composer))
-  track.setImportDateTime(
-    node?.DateAdded
-      ? new Date(`${node.DateAdded} 00:00:00`).toISOString()
-      : false
-  )
-  track.setCatalog(decodeString(node?.DiscNumber))
-  track.setGenre(decodeString(node?.Genre))
-  track.setColor(node?.Grouping) /* TODO: get hex color name */
-  track.setType(node?.Kind)
-  track.setLabel(decodeString(node?.Label))
-  track.setMix(decodeString(node?.Mix))
-  track.setPlayCount(parseInt(node?.PlayCount))
-  track.setRating(parseInt(node?.Rating))
-  track.setRemixer(decodeString(node?.Remixer))
-  track.setSampleRate(parseInt(node?.SampleRate * 1000))
-  track.setSize(parseFloat(node?.Size))
-  track.setKey(getOpenKey(node?.Tonality))
-  track.setDuration(parseFloat(node?.TotalTime * 1000))
-  track.setId(trackId ? trackId : decodeString(node?.TrackID))
-  track.setTrackNumber(parseInt(node?.TrackNumber))
-  track.setReleaseDate(
-    node.Year?.toString().length === 4 ? `${node.Year}-01-01` : null
-  )
-  let firstTempoNode = trackNode.getElementsByTagName('TEMPO')[0]
-  if (firstTempoNode) {
-    track.setGridStart(parseFloat(firstTempoNode?.attributes.Inizio))
-  }
-  track.setHotCues(
-    trackNode
-      .getElementsByTagName('POSITION_MARK')
-      .filter(mark => parseInt(mark.attributes.Num) > -1)
-      .reduce((acum, node) => {
-        let hotcue = new HotCue(node.attributes.Num, node.attributes.Start)
-        hotcue.setEnd(parseFloat(node.attributes.End))
-        hotcue.setColor(
-          convertRGBToHex(
-            parseInt(node.attributes.Red),
-            parseInt(node.attributes.Green),
-            parseInt(node.attributes.Blue)
-          )
-        )
-        hotcue.setType(parseInt(node.attributes.Type === 5 ? 4 : 0))
+  // track.setTitle(decodeString(node?.Name))
+  // track.setArtist(decodeString(node?.Artist))
+  // track.setAlbum(decodeString(node?.Album))
+  // track.setBpm(parseFloat(node?.AverageBpm))
+  // track.setBitRate(parseInt(node?.BitRate * 1000))
+  // track.setColor(node?.Colour?.replaceAll('0x', '#'))
+  // track.setComments(decodeString(node?.Comments))
+  // track.setProducer(decodeString(node?.Composer))
+  // track.setImportDateTime(
+  //   node?.DateAdded
+  //     ? new Date(`${node.DateAdded} 00:00:00`).toISOString()
+  //     : false
+  // )
+  // track.setCatalog(decodeString(node?.DiscNumber))
+  // track.setGenre(decodeString(node?.Genre))
+  // track.setColor(node?.Grouping) /* TODO: get hex color name */
+  // track.setType(node?.Kind)
+  // track.setLabel(decodeString(node?.Label))
+  // track.setMix(decodeString(node?.Mix))
+  // track.setPlayCount(parseInt(node?.PlayCount))
+  // track.setRating(parseInt(node?.Rating))
+  // track.setRemixer(decodeString(node?.Remixer))
+  // track.setSampleRate(parseInt(node?.SampleRate * 1000))
+  // track.setSize(parseFloat(node?.Size))
+  // track.setKey(getOpenKey(node?.Tonality))
+  // track.setDuration(parseFloat(node?.TotalTime * 1000))
+  // track.setId(trackId ? trackId : decodeString(node?.TrackID))
+  // track.setTrackNumber(parseInt(node?.TrackNumber))
+  // track.setReleaseDate(
+  //   node.Year?.toString().length === 4 ? `${node.Year}-01-01` : null
+  // )
+  // let firstTempoNode = trackNode.getElementsByTagName('TEMPO')[0]
+  // if (firstTempoNode) {
+  //   track.setGridStart(parseFloat(firstTempoNode?.attributes.Inizio))
+  // }
+  // track.setHotCues(
+  //   trackNode
+  //     .getElementsByTagName('POSITION_MARK')
+  //     .filter(mark => parseInt(mark.attributes.Num) > -1)
+  //     .reduce((acum, node) => {
+  //       let hotcue = new HotCue(node.attributes.Num, node.attributes.Start)
+  //       hotcue.setEnd(parseFloat(node.attributes.End))
+  //       hotcue.setColor(
+  //         convertRGBToHex(
+  //           parseInt(node.attributes.Red),
+  //           parseInt(node.attributes.Green),
+  //           parseInt(node.attributes.Blue)
+  //         )
+  //       )
+  //       hotcue.setType(parseInt(node.attributes.Type === 5 ? 4 : 0))
 
-        hotcue.setLabel(decodeString(node.attributes.Name))
-        return [...acum, hotcue]
-      }, [])
-  )
+  //       hotcue.setLabel(decodeString(node.attributes.Name))
+  //       return [...acum, hotcue]
+  //     }, [])
+  // )
 
-  track.setMemoryCues(
-    trackNode
-      .getElementsByTagName('POSITION_MARK')
-      .filter(mark => parseInt(mark.attributes.Num) < 0)
-      .reduce((acum, node) => {
-        let memorycue = new MemoryCue(node.attributes.Start)
-        memorycue.setEnd(parseFloat(node.attributes.End))
+  // track.setMemoryCues(
+  //   trackNode
+  //     .getElementsByTagName('POSITION_MARK')
+  //     .filter(mark => parseInt(mark.attributes.Num) < 0)
+  //     .reduce((acum, node) => {
+  //       let memorycue = new MemoryCue(node.attributes.Start)
+  //       memorycue.setEnd(parseFloat(node.attributes.End))
 
-        memorycue.setLabel(decodeString(node.attributes.Name))
-        return [...acum, memorycue]
-      }, [])
-  )
+  //       memorycue.setLabel(decodeString(node.attributes.Name))
+  //       return [...acum, memorycue]
+  //     }, [])
+  // )
 
   return track
 }

@@ -12,6 +12,7 @@ import LanguageScreen from './screens/language.screen'
 import LanguageIconSelect from './components/LanguageIconSelect'
 import { Box } from '@mui/material'
 import { IntlContext } from './context/intl.context'
+import TestModule from './TestModule'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -23,6 +24,7 @@ ReactDOM.render(
               <>
                 {!needSetLang && (
                   <>
+                    {/* <TestModule /> */}
                     <MainScreen />
                     <ConfigScreen />
                     <WorkCompleteScreen />

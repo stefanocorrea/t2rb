@@ -17,6 +17,7 @@
     "country-flag-icons": "^1.5.4",
     "electron-is-dev": "^1.2.0",
     "electron-store": "^8.0.1",
+    "fast-xml-parser": "^4.0.8",
     "html-entities": "^2.3.3",
     "moment": "^2.29.3",
     "react": "^17.0.1",

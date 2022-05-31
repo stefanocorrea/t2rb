@@ -44,7 +44,7 @@ export class WorkCompleteScreen extends React.Component {
                     notConvertedTracks.length > 0 ? '#0a1222' : 'rgb(16 33 19)'
                 }}
                 icon={<></>}
-                onClick={() => goToMainScreen()}
+                // onClick={() => goToMainScreen()}
               >
                 <AlertTitle>
                   <Alert
