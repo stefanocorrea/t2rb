@@ -5,43 +5,15 @@
 	<MUSICFOLDERS>
 	</MUSICFOLDERS>
 	<COLLECTION ENTRIES="1441">
-		<ENTRY MODIFIED_DATE="2022/5/31" MODIFIED_TIME="83007" AUDIO_ID="AO43dHj9vf/1TP/8tZ/6Rf//ZFz/r8//5jOP+qv//3VI/8/P//tEj/qr7/9lR//Kn//4Q3/8qP//pDf/2I3//+iv+4j//4Ra/8/P//hEz/yr7/+FWf+v/v/+VF/8vM//lWb/+Vf//8he/1Rv/6RE7/yc//xVXv+6v//nZv/5qv//hTv/2K//+FW/+/z//3Q3/6mu//dlj/r+///FR//Nvf/6dY//lb//22f/s0r/+DNv/rjv/6RY/+uf//xFf/uJv///lf/Jnv/8RW/93t//1UTv2az//FZu/c7P//ZE7+vL//xFf/3fn/+kRN/oh//8VU3/13//+6bP9jSphREBAA==" TITLE="tessssste" ARTIST="tessssste">
-			<LOCATION DIR="/:DJ/:" FILE="teste!@#$%^&amp;()[&amp;+].mp3" VOLUME="D:" VOLUMEID="1ee0d715">
+		<ENTRY MODIFIED_DATE="2022/2/26" MODIFIED_TIME="310" AUDIO_ID="AcgjMzMzMzMzMzMzMzMzMzM0RERERUREREREREREVUREVUVVZ9/////////////////////8jf//////////////////////+IiHd3h3h3iId4eu283/62RK///////////////////////////////////////////7eIrty7u7uYd1REZ3et27vMy4ZWeHjey6zc2YdndmUhJVZmZlMk//////////////////////////////////////////uHd3d3d3d3d3d3d4mpev///////////////////////////HeL////////////////////////////+xAAAAAA==" TITLE="ARTBAT, Dino Lenny - Atlas">
+			<LOCATION DIR="/:CAIAN/:bday minimal e techno/:" FILE="ARTBAT, Dino Lenny - Atlas.mp3" VOLUME="D:" VOLUMEID="1ee0d715">
 			</LOCATION>
-			<ALBUM OF_TRACKS="17" TRACK="2" TITLE="tessssste">
-			</ALBUM>
 			<MODIFICATION_INFO AUTHOR_TYPE="user">
 			</MODIFICATION_INFO>
-			<INFO BITRATE="320000" GENRE="Pop" LABEL="9 Sound Clik" RATING="bbb" COVERARTID="019/TM23OGBIXGEQGBZA52NQAKYSHZYD" KEY="4m" PLAYTIME="238" PLAYTIME_FLOAT="237.766525" RANKING="51" IMPORT_DATE="2020/5/1" RELEASE_DATE="2006/1/1" FLAGS="14" FILESIZE="9578">
+			<INFO BITRATE="320000" KEY="2A" PLAYTIME="457" PLAYTIME_FLOAT="456.463684" IMPORT_DATE="2021/10/3" FLAGS="12" FILESIZE="17832">
 			</INFO>
-			<TEMPO BPM="78.787354" BPM_QUALITY="100.000000">
-			</TEMPO>
-			<LOUDNESS PEAK_DB="-0.310970" PERCEIVED_DB="-1.584053" ANALYZED_DB="-1.584053">
-			</LOUDNESS>
-			<MUSICAL_KEY VALUE="18">
-			</MUSICAL_KEY>
-			<CUE_V2 NAME="n.n." DISPL_ORDER="0" TYPE="0" START="94.521416" LEN="0.000000" REPEATS="-1" HOTCUE="0">
-			</CUE_V2>
-			<CUE_V2 NAME="AutoGrid" DISPL_ORDER="0" TYPE="4" START="473.300415" LEN="0.000000" REPEATS="-1" HOTCUE="2">
-			</CUE_V2>
-			<CUE_V2 NAME="n.n." DISPL_ORDER="0" TYPE="5" START="96923.258854" LEN="6096.009404" REPEATS="-1" HOTCUE="1">
-			</CUE_V2>
 		</ENTRY>
 	</COLLECTION>
 	<SETS ENTRIES="0">
 	</SETS>
-	<PLAYLISTS>
-		<NODE TYPE="FOLDER" NAME="$ROOT">
-			<SUBNODES COUNT="1">
-				<NODE TYPE="PLAYLIST" NAME="playlist test">
-					<PLAYLIST ENTRIES="1" TYPE="LIST" UUID="c0e86c8cb85a410d96cee373c348dc11">
-						<ENTRY>
-							<PRIMARYKEY TYPE="TRACK" KEY="D:/:DJ/:teste!@#$%^&amp;()[&amp;+].mp3">
-							</PRIMARYKEY>
-						</ENTRY>
-					</PLAYLIST>
-				</NODE>
-			</SUBNODES>
-		</NODE>
-	</PLAYLISTS>
 </NML>

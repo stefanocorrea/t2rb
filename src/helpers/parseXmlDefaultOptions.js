@@ -14,7 +14,11 @@ export function getParseOptions(program) {
       ]
       break
     case 'rekordbox':
-      regexNodesThatAlwaysArrays = ['collection.track$']
+      regexNodesThatAlwaysArrays = [
+        'collection.track$',
+        'track.tempo$',
+        'track.POSITION_MARK$'
+      ]
       break
     default:
       regexNodesThatAlwaysArrays = []

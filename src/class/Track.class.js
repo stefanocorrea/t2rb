@@ -41,6 +41,7 @@ export class Track {
   gridStart
   modificationDateTime
   originalXml
+  md5
 
   constructor(location) {
     this.location = location

@@ -261,6 +261,7 @@ export class App extends React.Component {
 
     let xmlLibraryString = fs.readFileSync(traktorFile, 'utf-8')
     traktor.importLibrary(xmlLibraryString)
+
     if (!traktor) return this.abortTheMagic('invalid-traktor-file')
 
     /* add step of work for every track. Since tracks takes long to convert */
@@ -311,6 +312,7 @@ export class App extends React.Component {
         : track.location.replace(/.*\//gims, '')
     )
 
+    /* continue to user DJ Data Converter */
     fs.readFile(track.location, 'utf-8', async error => {
       if (error) {
         this.addWorkDoneSteps()

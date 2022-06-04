@@ -263,76 +263,77 @@ export async function createTrackFromRekordboxXML(xmlString, trackId = false) {
     decodeURIComponent(xml.TRACK?._Location.replace('file://localhost/', ''))
   )
 
-  // track.setOriginalXml(xmlString)
+  track.setOriginalXml(xmlString)
 
-  // track.setTitle(decodeString(node?.Name))
-  // track.setArtist(decodeString(node?.Artist))
-  // track.setAlbum(decodeString(node?.Album))
-  // track.setBpm(parseFloat(node?.AverageBpm))
-  // track.setBitRate(parseInt(node?.BitRate * 1000))
-  // track.setColor(node?.Colour?.replaceAll('0x', '#'))
-  // track.setComments(decodeString(node?.Comments))
-  // track.setProducer(decodeString(node?.Composer))
-  // track.setImportDateTime(
-  //   node?.DateAdded
-  //     ? new Date(`${node.DateAdded} 00:00:00`).toISOString()
-  //     : false
-  // )
-  // track.setCatalog(decodeString(node?.DiscNumber))
-  // track.setGenre(decodeString(node?.Genre))
-  // track.setColor(node?.Grouping) /* TODO: get hex color name */
-  // track.setType(node?.Kind)
-  // track.setLabel(decodeString(node?.Label))
-  // track.setMix(decodeString(node?.Mix))
-  // track.setPlayCount(parseInt(node?.PlayCount))
-  // track.setRating(parseInt(node?.Rating))
-  // track.setRemixer(decodeString(node?.Remixer))
-  // track.setSampleRate(parseInt(node?.SampleRate * 1000))
-  // track.setSize(parseFloat(node?.Size))
-  // track.setKey(getOpenKey(node?.Tonality))
-  // track.setDuration(parseFloat(node?.TotalTime * 1000))
-  // track.setId(trackId ? trackId : decodeString(node?.TrackID))
-  // track.setTrackNumber(parseInt(node?.TrackNumber))
-  // track.setReleaseDate(
-  //   node.Year?.toString().length === 4 ? `${node.Year}-01-01` : null
-  // )
-  // let firstTempoNode = trackNode.getElementsByTagName('TEMPO')[0]
-  // if (firstTempoNode) {
-  //   track.setGridStart(parseFloat(firstTempoNode?.attributes.Inizio))
-  // }
-  // track.setHotCues(
-  //   trackNode
-  //     .getElementsByTagName('POSITION_MARK')
-  //     .filter(mark => parseInt(mark.attributes.Num) > -1)
-  //     .reduce((acum, node) => {
-  //       let hotcue = new HotCue(node.attributes.Num, node.attributes.Start)
-  //       hotcue.setEnd(parseFloat(node.attributes.End))
-  //       hotcue.setColor(
-  //         convertRGBToHex(
-  //           parseInt(node.attributes.Red),
-  //           parseInt(node.attributes.Green),
-  //           parseInt(node.attributes.Blue)
-  //         )
-  //       )
-  //       hotcue.setType(parseInt(node.attributes.Type === 5 ? 4 : 0))
+  track.setTitle(decodeString(xml.TRACK?._Name))
+  track.setArtist(decodeString(xml.TRACK?._Artist))
+  track.setAlbum(decodeString(xml.TRACK?._Album))
+  track.setBpm(parseFloat(xml.TRACK?._AverageBpm))
+  track.setColor(xml.TRACK?._Colour?.replaceAll('0x', '#'))
+  track.setComments(decodeString(xml.TRACK?._Comments))
+  track.setProducer(decodeString(xml.TRACK?._Composer))
+  track.setImportDateTime(
+    xml.TRACK?._DateAdded
+      ? new Date(`${xml.TRACK?._DateAdded} 00:00:00`).toISOString()
+      : false
+  )
+  track.setCatalog(decodeString(xml.TRACK?._DiscNumber))
+  track.setGenre(decodeString(xml.TRACK?._Genre))
+  track.setType(xml.TRACK?._Kind)
+  track.setLabel(decodeString(xml.TRACK?._Label))
+  track.setMix(decodeString(xml.TRACK?._Mix))
+  track.setPlayCount(parseInt(xml.TRACK?._PlayCount))
+  track.setRating(parseInt(xml.TRACK?._Rating))
+  track.setRemixer(decodeString(xml.TRACK?._Remixer))
+  track.setSampleRate(parseInt(xml.TRACK?._SampleRate * 1000))
+  track.setSize(parseFloat(xml.TRACK?._Size))
+  track.setKey(getOpenKey(xml.TRACK?._Tonality))
+  track.setDuration(parseFloat(xml.TRACK?._TotalTime * 1000))
+  track.setId(trackId ? trackId : decodeString(xml.TRACK?._TrackID))
+  track.setTrackNumber(parseInt(xml.TRACK?._TrackNumber))
+  track.setReleaseDate(
+    xml.TRACK?._Year?.toString().length === 4
+      ? `${xml.TRACK?._Year}-01-01`
+      : null
+  )
+  let firstTempoNode =
+    xml.TRACK?.TEMPO?.length > 0 ? xml?.TRACK.TEMPO[0] : false
+  if (firstTempoNode) {
+    track.setGridStart(parseFloat(firstTempoNode?._Inizio))
+  }
+  track.setHotCues(
+    xml?.TRACK?.POSITION_MARK?.filter(mark => parseInt(mark._Num) > -1).reduce(
+      (acum, node) => {
+        let hotcue = new HotCue(node._Num, node._Start)
+        hotcue.setEnd(parseFloat(node._End))
+        hotcue.setColor(
+          convertRGBToHex(
+            parseInt(node._Red),
+            parseInt(node._Green),
+            parseInt(node._Blue)
+          )
+        )
+        hotcue.setType(parseInt(node._Type === 5 ? 4 : 0))
 
-  //       hotcue.setLabel(decodeString(node.attributes.Name))
-  //       return [...acum, hotcue]
-  //     }, [])
-  // )
+        hotcue.setLabel(decodeString(node._Name))
+        return [...acum, hotcue]
+      },
+      []
+    )
+  )
 
-  // track.setMemoryCues(
-  //   trackNode
-  //     .getElementsByTagName('POSITION_MARK')
-  //     .filter(mark => parseInt(mark.attributes.Num) < 0)
-  //     .reduce((acum, node) => {
-  //       let memorycue = new MemoryCue(node.attributes.Start)
-  //       memorycue.setEnd(parseFloat(node.attributes.End))
+  track.setMemoryCues(
+    xml?.TRACK?.POSITION_MARK?.filter(mark => parseInt(mark._Num) < 0).reduce(
+      (acum, node) => {
+        let memorycue = new MemoryCue(node._Start)
+        memorycue.setEnd(parseFloat(node._End))
 
-  //       memorycue.setLabel(decodeString(node.attributes.Name))
-  //       return [...acum, memorycue]
-  //     }, [])
-  // )
+        memorycue.setLabel(decodeString(node._Name))
+        return [...acum, memorycue]
+      },
+      []
+    )
+  )
 
   return track
 }
